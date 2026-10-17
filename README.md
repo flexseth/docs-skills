@@ -1,0 +1,1 @@
+![Docs Assessment shows an infographic with relevant information to docs workflow and participation](docs-assessment.png)
