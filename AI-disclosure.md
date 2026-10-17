@@ -1,9 +1,35 @@
 # AI Disclosure
 
-This project was partly produced with the help of an AI assistant (Claude Code, using Claude Haiku 5.5). This file records what the AI did, what it checked, and what still needs a human review.
+This file records what the AI did, what it checked, and what still needs a human review.
+
+This project was partly produced with the help of an AI assistants: 
+
+- Claude Code: Haiku (technical writing), Sonnet (research and planning)
+- GitHub Copilot: Code Completion
+- GitHub Spec Kit: Spec Outlines, Technical Implementation Plans
 
 ## What the AI did
 
+### Spec Kit
+
+Agent Skills, see [command overview](https://github.github.io/spec-kit/reference/agentic-sdd.html#command-overview)
+
+- Manifest "Constitution" or foundational standards for the project
+- Create Roles and User Stories based on artifacts
+- Technical Implementation Plan
+- Project Management - Break the plan down into tasks
+- Implementation - Hand off to Claude
+- Verification - Review work against spec
+- Analyze - Quality gate to test implementation against tasks
+- Quality Assurance - Ensure the final output meets the project's standards
+
+### GitHub Copilot
+
+**GitHub Copilot Code Completion** 
+
+Assisted in writing spec outlines, technical language and inference.
+
+### Claude
 - **`handbooks.md`:** Searched wordpress.org/documentation and the linked developer and contributor sites to find handbooks. Wrote the list of handbook names and links.
 - **`guides.md`:** Pulled the page titles and article links from the four Resource Guides on wordpress.org/documentation (Technical guides, Support guides, Customization, WordPress overview). Added a source-of-truth link for each subsection.
 - **`TRIAGE.md`:** A triage of all 469 open issues in WordPress/Documentation-Issue-Tracker (snapshot 2026-10-16). Produced by Claude, not reviewed issue by issue by a person.
