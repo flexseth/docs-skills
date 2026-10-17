@@ -29,4 +29,4 @@ Content sources for WordPress documentation, grouped by where they are hosted.
 
 ## Other
 
-- [WordPress Playground](https://wordpress.github.io/wordpress-playground/)
+- [WordPress Playground](https://developer.wordpress.org/playground/)
