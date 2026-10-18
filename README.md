@@ -16,25 +16,28 @@ This project hopes to relieve strain on the WordPress Documentation Team, by all
 
 **Roles**
 
-- Human: Ideation, decision-making, and oversight throughout the project.
+- Human: Ideation, specification, decision-making, and oversight throughout the project.
 - Spec Kit: The brain of the project, responsible for planning, task management, and documentation.
 - Claude: AI backbone for planning, ideating, and implementation of tasks.
 
-### Spec Kit Overview
+### Spec Kit by GitHub
 
 Agentic, Spec-Driven Development
 
 > Build with a spec, fix a bug, or assess an idea — with your coding agent.
 
-### Spec Kit
+[https://github.com/spec-kit/](https://github.github.com/spec-kit/)
+
+### Spec Kit + Claude for SDD
 
 Spec Kit can be considered the brain of the project
 
-GitHub's Spec Kit will be the AI harness for creating the specification for the project.
+GitHub's Spec Kit will be the AI harness for creating the specification for the project, acting as the central coordinator. 
 
-While Spec Kit will be the overarching harness, it will use Claude as the AI backbone for planning, ideating, and implementation of the tasks along the way. 
+Claude will serve as the AI backbone for planning, ideating, and implementation of the tasks along the way. 
 
-Spec Kit will be used for the following: 
+**Spec Kit will be used for:** 
+
 - Technical Documentation on Project Specification
 - Project Planning and Task Management (Milestones, Deliverables)
 - Knowledge Management and Documentation
@@ -43,9 +46,12 @@ Spec Kit will be used for the following:
 - Other Project Management Tasks
 
 
-Claude will be used for 
-- Planning: Handed off from `specify-plan`, Claude's Plan Mode will create the actual implementation plan 
-- Implement: Handed off from `specify-implement`, 
-- Security Review: Implement and enforce security guardrails (via `security-review` plugin)
+**Claude will be used for:** 
+    
+- **Planning:** Handed off from `specify-plan`, Claude's Plan Mode will create the actual implementation plan 
+- **Implement:** Handed off from `specify-implement` 
+- **Security Review:** Enforce security guardrails
 
-The Human was used for ideation, decision-making, and oversight throughout the project.
+**The Human** 
+
+[@flexseth:](https://github.com/flexseth) Ideation, decision-making, and project oversight.
