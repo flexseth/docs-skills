@@ -10,6 +10,8 @@ The input will be block markup from WordPress's Gutenberg Block Editor.
 
 The input should come from the documentation canonical source, AKA, the "Source of Truth."
 
+For sources of truth see `resources/` -Handbooks and Guides can be found here.
+
 ## Output
 
 A GitHub PR introducing the suggested changes for review by the Docs Team.
