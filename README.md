@@ -54,4 +54,12 @@ Claude will serve as the AI backbone for planning, ideating, and implementation 
 
 **The Human** 
 
-[@flexseth:](https://github.com/flexseth) Ideation, decision-making, and project oversight.
+[@flexseth:](https://github.com/flexseth) Ideation, decision-making, and project oversight. 
+
+# Next Steps
+
+# Sample Input
+
+# Expected Output
+
+
