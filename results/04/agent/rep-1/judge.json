@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "smart-media-markup.php registers smart_media_markup_filter_block on render_block_core/image, render_block_core/gallery and render_block_core/cover with priority 20 and 2 args `( $block_content, $block )`."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "class-smart-media-markup-processor.php does all HTML parsing and changes through WP_HTML_Tag_Processor; preg_* is used only to collapse caption whitespace and split rel tokens, never to parse HTML."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "Smart_Media_Markup_Processor::process() checks `null === $processor->get_attribute( 'decoding' )` before calling set_attribute( 'decoding', 'async' )."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "process() collects #text tokens between FIGCAPTION opener and closer with next_token()/get_modifiable_text(), bookmarks the first empty-alt IMG only when $caption_as_alt is true, then seek()s back and sets alt; the flag comes from $block['attrs']['smartMediaCaptionAsAlt'] on core/image only."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "get_modifiable_text() returns decoded text with nested tags skipped, normalize_text() trims it, and set_attribute() escapes it with no esc_attr, so it is not double-escaped (the kite test covers this)."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "The first tag, if it is a FIGURE (or the Cover DIV wrapper), gets `$processor->add_class( self::WRAPPER_CLASS )` with 'has-smart-media'."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "is_external_url() compares wp_parse_url( $url ) host with wp_parse_url( home_url(), PHP_URL_HOST ) case-insensitively; maybe_add_noopener() splits the existing rel, checks for noopener case-insensitively and appends it without duplicating."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "process() returns `$processor->get_updated_html()`."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "smart_media_markup_register_attribute() on register_block_type_args returns early unless $block_name is 'core/image', then adds a boolean attribute with default false."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "src/index.js addCaptionAsAltAttribute, hooked to blocks.registerBlockType, returns settings unchanged unless name === 'core/image'."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "src/index.js withCaptionAsAltControl uses createHigherOrderComponent on editor.BlockEdit and renders InspectorControls > PanelBody > ToggleControl only when props.name is 'core/image'."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "smart_media_markup_enqueue_editor_assets() on enqueue_block_editor_assets requires build/index.asset.php and uses its dependencies and version in wp_enqueue_script."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "tests/test-smart-media-markup.php has a data provider with input/expected HTML for decoding, caption-as-alt (on, off, existing alt), the wrapper class, rel merging, gallery and cover, plus integration tests."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used (next_token, get_token_type, get_modifiable_text, is_tag_closer, set_bookmark, seek, release_bookmark, add_class, has_class, rest_sanitize_boolean, wp_parse_url, createHigherOrderComponent, etc.) exists in WordPress 6.5+ and Gutenberg."
+    }
+  ],
+  "invented_apis": [],
+  "total": 15,
+  "max": 15,
+  "judge_cost_usd": 0.22416360000000002
+}

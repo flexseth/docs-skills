@@ -1,0 +1,40 @@
+{
+	"name": "editorial-checklist",
+	"version": "1.0.0",
+	"description": "Pre-publish editorial checklist for the block editor.",
+	"author": "Editorial Checklist Contributors",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"private": true,
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"files": [
+		"build",
+		"includes",
+		"languages",
+		"editorial-checklist.php",
+		"readme.txt"
+	],
+	"dependencies": {
+		"@wordpress/api-fetch": "*",
+		"@wordpress/components": "*",
+		"@wordpress/core-data": "*",
+		"@wordpress/data": "*",
+		"@wordpress/editor": "*",
+		"@wordpress/element": "*",
+		"@wordpress/i18n": "*",
+		"@wordpress/icons": "*",
+		"@wordpress/notices": "*",
+		"@wordpress/plugins": "*"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

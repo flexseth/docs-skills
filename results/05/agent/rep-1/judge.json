@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/index.js calls createReduxStore('editorial-checklist/store', { reducer, actions, selectors, resolvers }) and then register( store )."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/reducer.js is pure and returns new objects for RECEIVE_ITEMS, TOGGLE_ITEM, SET_DONE_ITEMS and RESET_ITEMS, without side effects."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/selectors.js defines getItems, getIncompleteRequiredItems (memoized with createSelector) and getProgress, which returns a rounded percentage."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/resolvers.js exports a thunk getItems, `() => async ({ dispatch })`, that calls apiFetch on '/editorial-checklist/v1/items' and dispatches receiveItems; its name matches the getItems selector."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "In editorial-checklist.php, the permission_callback returns current_user_can('edit_posts'), and editorial_checklist_get_items() passes the defaults through apply_filters('editorial_checklist_items', $defaults)."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "register_post_meta for '_editorial_checklist' sets type 'array', single true, a show_in_rest schema of an array of strings, and an auth_callback that checks edit_post."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "src/hooks/use-checklist.js calls useEntityProp('postType', postType, 'meta', postId), writes meta on toggle and reset, and checklist-controller.js copies meta into the store with setDoneItems."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "src/components/checklist-sidebar.js renders a PluginSidebar with a CheckboxControl for each item and a ProgressIndicator built on a native <progress> element."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "src/components/pre-publish-panel.js renders a PluginPrePublishPanel that lists the incomplete required items in a warning Notice."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "checklist-controller.js calls lockPostSaving(LOCK_NAME) or unlockPostSaving(LOCK_NAME) with the lock name 'editorial-checklist' inside a useEffect that depends on incompleteCount, and it also unlocks when the component unmounts."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "checklist-controller.js calls createWarningNotice with id 'editorial-checklist-incomplete' and calls removeNotice(NOTICE_ID) once all required items are done."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "useSelect and useDispatch are called with the store descriptors checklistStore, editorStore and noticesStore, and the select call uses the real hasFinishedResolution metadata selector."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "editorial_checklist_enqueue_editor_assets runs on enqueue_block_editor_assets and passes the dependencies and version from build/index.asset.php to wp_enqueue_script."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used exists in WordPress or Gutenberg, including createSelector, useBaseControlProps, __experimentalVStack, PluginSidebarMoreMenuItem and hasFinishedResolution, so no points are deducted."
+    }
+  ],
+  "invented_apis": [],
+  "total": 15,
+  "max": 15,
+  "judge_cost_usd": 0.2182956
+}

@@ -1,0 +1,67 @@
+/**
+ * Styles applied on the front end and in the editor.
+ */
+.wp-block-recipe-scaler-recipe {
+	border: 1px solid currentColor;
+	border-radius: 6px;
+	padding: 1.25em 1.5em;
+
+	.recipe-scaler__title {
+		margin-top: 0;
+	}
+
+	.recipe-scaler__controls {
+		display: flex;
+		align-items: center;
+		gap: 0.75em;
+		margin-bottom: 1em;
+	}
+
+	.recipe-scaler__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25em;
+		height: 2.25em;
+		padding: 0;
+		border: 1px solid currentColor;
+		border-radius: 50%;
+		background: transparent;
+		color: inherit;
+		font-size: 1em;
+		line-height: 1;
+		cursor: pointer;
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 2px;
+		}
+	}
+
+	.recipe-scaler__servings-count {
+		display: inline-block;
+		min-width: 2ch;
+		font-weight: 700;
+		text-align: center;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.recipe-scaler__ingredients {
+		margin: 0;
+		padding-left: 1.25em;
+	}
+
+	.recipe-scaler__ingredient {
+		margin-bottom: 0.25em;
+	}
+
+	.recipe-scaler__quantity {
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+}

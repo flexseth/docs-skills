@@ -1,0 +1,86 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 0.5,
+      "max": 1,
+      "reason": "src/index.js addVisibilityAttribute uses addFilter('blocks.registerBlockType', 'block-visibility-rules/add-attribute') and skips core/freeform and blocks failing hasBlockSupport(settings, 'customClassName', true), but the attribute is only `{ type: 'object' }` with no default."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "withVisibilityControls is built with createHigherOrderComponent, renders <BlockEdit { ...props } /> and a VisibilityPanel wrapped in InspectorControls/PanelBody."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "VisibilityPanel renders a RadioControl for the type, and its two DateTimePicker controls only appear inside `'date-range' === type && (...)`."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "withVisibilityClassName (an editor.BlockListBlock HOC) passes className with 'has-visibility-rule' added to BlockListBlock."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "src/editor.scss defines the dashed outline on .has-visibility-rule and is imported in index.js; build/index.css is registered and enqueued on enqueue_block_editor_assets and enqueue_block_assets."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "updateRule calls doAction('blockVisibilityRules.ruleChanged', nextRule, previousRule, { clientId, name }) on every change."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "ruleTypes = applyFilters('blockVisibilityRules.ruleTypes', getDefaultRuleTypes(), name) supplies the RadioControl options."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "block_visibility_rules_register_attribute on register_block_type_args adds a visibilityRule object schema with type/start/end properties."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "block_visibility_rules_render_block returns '' when $matches is false and $block_content otherwise."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "block_visibility_rules_evaluate uses is_user_logged_in() and compares current_datetime() against DateTimeImmutable objects created with wp_timezone()."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "apply_filters('block_visibility_rules_match', $matches, $rule, $block, $block_content) lets the result be overridden."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "block_visibility_rules_register_assets includes build/index.asset.php and passes $asset['dependencies'] and $asset['version'] to wp_register_script."
+    },
+    {
+      "id": 13,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used (hasBlockSupport, getBlockType, getSettings from @wordpress/date, DateTimePicker, Notice, Button variant/size, wp_timezone, current_datetime, etc.) exists in WordPress or Gutenberg."
+    }
+  ],
+  "invented_apis": [],
+  "total": 13.5,
+  "max": 14,
+  "judge_cost_usd": 0.19319560000000002
+}

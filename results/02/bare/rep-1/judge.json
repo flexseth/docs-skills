@@ -1,0 +1,98 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "team-directory.php registers TEAM_DIRECTORY_POST_TYPE ('team_member') with 'show_in_rest' => true and 'custom-fields' in 'supports'."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "team-directory.php calls register_post_meta for 'role' (string) and 'start_year' (integer), each with single => true, show_in_rest and an auth_callback that checks current_user_can('edit_post')."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "team_directory_register_rest_routes runs on rest_api_init and calls Team_Directory_REST_Controller::register_routes, which uses register_rest_route with namespace 'team-directory/v1'."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "get_collection_params() defines role, page and per_page, each with a type and with sanitize_callback and validate_callback; per_page has 'maximum' => self::MAX_PER_PAGE (50)."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "The GET route's permission_callback is get_items_permissions_check(), which returns true unconditionally, so public reads are allowed."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "get_items() calls $response->header('X-WP-Total', ...) and $response->header('X-WP-TotalPages', ...) on the WP_REST_Response returned by rest_ensure_response."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "Both routes set 'schema' => array($this, 'get_public_item_schema'), and get_item_schema() defines a draft-04 object schema."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "The route pattern is '/members/(?P<id>\\d+)/role', and update_role_permissions_check calls current_user_can('edit_post', $post->ID) after confirming the post is a team member."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "The role arg is cleaned by sanitize_role (sanitize_text_field) and checked by validate_role; update_role calls update_post_meta and returns a WP_Error with status 404 for an invalid member (it does not check what update_post_meta returns)."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "edit.js calls apiFetch({ path: addQueryArgs('/team-directory/v1/members', query), parse: false })."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "edit.js shows a SelectControl role filter and a <Spinner /> while isLoading is true, using useState and useEffect."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "block.json declares render: file:./render.php, and render.php escapes output with esc_url, esc_html and esc_html_e, plus get_block_wrapper_attributes."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "src/sidebar/index.js calls registerPlugin, and MemberDetailsPanel returns null unless editorStore getCurrentPostType() is 'team_member'; the PHP side also only enqueues the script on that screen."
+    },
+    {
+      "id": 14,
+      "points": 1,
+      "max": 1,
+      "reason": "MemberDetailsFields uses useEntityProp('postType', POST_TYPE, 'meta') and writes back with setMeta({...meta, [key]: value})."
+    },
+    {
+      "id": 15,
+      "points": 2,
+      "max": 2,
+      "reason": "No invented APIs found: the WP_REST_Controller helpers, rest_authorization_required_code, Flex props, the __next40pxDefaultSize props, PluginDocumentSettingPanel from @wordpress/editor and the apiFetch signal option all exist."
+    }
+  ],
+  "invented_apis": [],
+  "total": 16,
+  "max": 16,
+  "judge_cost_usd": 0.2492876
+}

@@ -1,110 +1,107 @@
-# eval-1
+# docs-lookup-agent evaluation
 
-- [ ] Start this process from `sanity-check`
-- [ ] Clear the context window before proceeding further with instructions.
-- [ ] Switch to Opus
-- [ ] Ask the user - Should I proceed with Opus?
+Does Opus build WordPress plugins faster, cheaper and more accurately when it hands documentation lookups to the docs-lookup sub-agent?
 
-If Yes, go to the next step.
-If No, abort.
+## Arms
 
-# idea
+| Arm | Main model | Docs access |
+| --- | --- | --- |
+| `agent` | Opus | docs-lookup sub-agent (Sonnet) + WebFetch |
+| `bare` | Opus | WebFetch only, no sub-agents |
+| `sonnet` (optional) | Sonnet | WebFetch only, no sub-agents |
 
-I want to evaluate the efficienty of the calling process and agent skill as it stands now. 
+`agent` vs `bare` is the main comparison: same model, only the sub-agent differs. `sonnet` answers a separate question, whether a cheaper model alone is enough.
 
-To do this, we will emulate creating WordPress plugins with and without the docs lookup agent.
+Opus is not forced to use the agent. If it never calls it, the run is flagged in `metrics.json`.
 
-We want totest how long it takes to fetch the documentation, and how accurately the prompt creates the functionality given the fetched documentation. I also want to test the total time it takes the prompt to run, and to count tokens.
+## How a run works
 
-# setup
+`run.sh` starts a fresh `claude -p` process for every run, in an empty temp dir outside `~/Developer`. Each run therefore:
 
-To do this, we will need multiple worktrees, with real world prompts.
+- starts with a clean context, so no `/clear` is needed
+- uses a fixed model, so no `/model` switch is needed
+- loads no CLAUDE.md or memory
+- can't see other runs' output or this folder
 
-There will be 7 worktrees, each based off of the head of `sanity-check`
+Time, tokens, cost and per-model usage come from Claude Code's own `stream-json` result event, not from the model.
 
-The worktrees should be named `base-{`<run-number>`}`
+## Files
 
-<run-number> will be sequential
+| Path | What it is |
+| --- | --- |
+| `agents/docs-lookup.md` | The agent, built from `docs-lookup-agent.md`. Loaded only in the `agent` arm via `--agents` |
+| `prompts/_preamble.md` | Shared instructions prepended to every prompt (write to `./output/`, standards, no shell) |
+| `prompts/01.md`–`07.md` | The 7 plugin prompts, fixed before any run |
+| `rubrics/01.md`–`07.md` | Scoring criteria per prompt, plus the doc surfaces each prompt depends on |
+| `run.sh` | One run: `./run.sh <prompt> <arm> [rep]` |
+| `run_all.sh` | Every prompt × arm × repeat, then scoring and the summary |
+| `summarize.py` | Parses a run's `stream.jsonl` into `metrics.json`; `--table` builds `results/summary.md` |
+| `score.py` | Automated checks: `php -l`, PHPCS (WordPress), optional build and Plugin Check |
+| `judge.py` | Blind rubric scoring by a separate Claude call |
 
-In each worktree, we will need two folders: 
+## Running it
 
-These folders will be variables: `handler`
+```sh
+# Smoke test first
+./run.sh 01 agent
+./run.sh 01 bare
 
-`handler` will be either: 
+# Everything (resumable; existing results are skipped)
+./run_all.sh
+REPS=3 ARMS="agent bare sonnet" ./run_all.sh
+```
 
-- `agent` - the work in this branch will be done by the `docs-lookup-agent` called by Opus
-- `sonnet` - the work in this branch **must** be done solely by Sonnet
+Optional scoring extras:
 
-This should give us the directory structure of: 
-/base-{<run-number>}/<handler>/
+- `SCORE_BUILD=1` runs `npm install` + `npm run build` per plugin (slow).
+- `WP_PATH=/path/to/wordpress` runs Plugin Check (needs `wp` and the plugin-check plugin active).
+- PHPCS runs only if the WordPress standard is installed: `composer global require wp-coding-standards/wpcs`.
 
-Inside of this directory, we want to store the following files: 
+## Results
 
-- `prompt.md` - the real world generated prompt, as specified below
-- `tokens.md`  - the total number of tokens used
-- `time.md`    - the amount of time in ms it took to run the entire session
-- `/output`   - a directory of the generated WordPress plugin
+Each run writes `results/<prompt>/<arm>/rep-<n>/`:
 
+| File | Contents |
+| --- | --- |
+| `prompt.md` | Exact prompt sent, verbatim, identical across arms |
+| `stream.jsonl` | Full event log, including every tool call |
+| `output/` | The generated plugin |
+| `metrics.json` | Duration, tokens, cost, models used, fetch counts (main vs sub-agent), lookups, flags |
+| `agent-findings.json` | Every sub-agent request and the JSON it returned |
+| `score.json` | Automated check results |
+| `judge.json` | Rubric score per criterion and invented APIs |
 
-So at the end of each numbered run, there should be an agent-called workflow, and one from Sonnet.
+`results/summary.md` compares the arms per prompt and overall.
 
-If the agent call fails, there is info what to do later in this document.
+## Prompt rules
 
-**IMPORTANT** Save prompts _verbatim_
+Every prompt must:
 
-For each numbered run, it should save the prompt that is generated **verbatim** so the models can be checked against each other for token spend, timing, and accuracy.
+- need at least 7 WordPress docs across different surfaces
+- include at least 2 docs that aren't general knowledge
+- include at least 1 complex doc:
+  - Interactivity API
+  - JS Hooks
+  - REST API
+  - WP HTML API
+  - Data stores
+  - Nonces
+  - Settings and Options API
 
-Read the prompt generating instructions at the end of the document, and create a prompt. Save it to memory. This prompt will change in each run, but it's important to create the prompt before starting the process of evaluating the runs.
+| Prompt | Plugin | Complex surface |
+| --- | --- | --- |
+| 01 | Recipe Scaler | Interactivity API |
+| 02 | Team Directory | REST API |
+| 03 | Maintenance Banner | Settings and Options API |
+| 04 | Smart Media Markup | WP HTML API |
+| 05 | Editorial Checklist | Data store |
+| 06 | Block Visibility Rules | JS Hooks |
+| 07 | Event RSVP | Nonces |
 
-The prompt can be saved in `prompt.tmp`
+`metrics.json` lists the URLs each run fetched, so you can check how many docs were read.
 
-# running the evaluation
+## Caveats
 
-Start the runs, starting at run number 1.
-
-- Create the two worktrees for the run, given the file structure above and run #
-
-## Run 1
-
-**Clear Context Window** For each numbered run
-
-Do not count this time towards this total.
-
-- Switch the model to Opus (if it is not already set to Opus)
-- Switch to the relevant run # worktree branch, with model being `docs-lookup-agent`
-- Start counting tokens and time at 0 and 0.00ms
-- On Pass 1 - Use the Docs Lookup Agent. If the `docs-lookup-agent` is called, check to verify that Sonnet or Haiku is used, and note which model in `model.md`. Do not force the switch; if the prompt runs against the `docs-lookup-agent` call and does not turn on Sonnet or Haiku, we need to flag that in `model.md` - but proceed with the prompt.
-- Run the prompt (see plugin specifics below)
-- report results from pass 1 to the checked out worktree
-- If the `docs-lookup-agent` was called, report back it's findings via a `.json` file
-- clear the context window
-
-## Run 2
-
-- Switch to the `sonnet` model branch.
-- Switch to the relevant run # worktree branch, with model being `sonnet`
-- Start counting tokens and time at 0 and 0.00ms
-- On Pass 2 - Run the prompt with Sonnet
-- report results from pass 2 to the checked out worktree
-- clear the context window
-
-## end of pass
-
-Increase <run-number>
-Repeat Run 1 and 2 above
-
-Do this until you get to <run-number> 8, and then stop.
-
-# prompt specifics
-
-The prompts should each be different, and need to call at least 7 WordPress docs across various surfaces. For each prompt, at least two of these documentation reads should not be considered "general knowledge," and one should be a complex document like: 
-
-- Interactivity API
-- JS Hooks
-- REST API
-- WP HTML API
-- Using the Data store
-- Using a nonce to check something
-- the Settings and Options API
-
-
+- One repeat per prompt is noisy. Use `REPS=2` or more before drawing conclusions.
+- The judge is a model and can be wrong. Spot-check a few `judge.json` files against the code.
+- The `agent` arm can still use WebFetch directly. That is deliberate: it measures whether Opus chooses to delegate.

@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "event-rsvp/form",
+	"version": "1.0.0",
+	"title": "Event RSVP Form",
+	"category": "widgets",
+	"icon": "tickets-alt",
+	"description": "An RSVP form with name, email and number of guests.",
+	"keywords": [ "rsvp", "event", "form" ],
+	"textdomain": "event-rsvp",
+	"usesContext": [ "postId" ],
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "RSVP"
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Send RSVP"
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": [ "wide", "full" ],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}

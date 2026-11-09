@@ -1,0 +1,26 @@
+{
+	"name": "maintenance-banner",
+	"version": "1.0.0",
+	"description": "Scheduled maintenance banner with a Settings page and block editor sidebar.",
+	"author": "Seth",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"files": [
+		"build",
+		"includes",
+		"languages",
+		"maintenance-banner.php",
+		"uninstall.php",
+		"readme.txt"
+	],
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

@@ -1,0 +1,47 @@
+.wp-block-event-rsvp-form {
+	.event-rsvp__field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25em;
+		margin: 0 0 1em;
+
+		input,
+		select {
+			max-width: 100%;
+			padding: 0.5em;
+			font: inherit;
+		}
+
+		[aria-invalid="true"] {
+			border-color: #cc1818;
+		}
+	}
+
+	.event-rsvp__error {
+		color: #cc1818;
+		font-size: 0.875em;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	.event-rsvp__message {
+		&:empty {
+			display: none;
+		}
+
+		&.is-success {
+			color: #007017;
+		}
+
+		&.is-error {
+			color: #cc1818;
+		}
+	}
+
+	.event-rsvp__submit[disabled] {
+		opacity: 0.6;
+		cursor: wait;
+	}
+}

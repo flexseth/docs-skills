@@ -1,0 +1,25 @@
+{
+	"name": "smart-media-markup",
+	"version": "1.0.0",
+	"description": "Improves the front-end HTML of core Image, Gallery and Cover blocks without changing saved content.",
+	"author": "Smart Media Markup Contributors",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"files": [
+		"build",
+		"includes",
+		"smart-media-markup.php",
+		"readme.txt"
+	],
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

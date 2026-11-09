@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/index.js calls createReduxStore( STORE_NAME, { reducer, actions, selectors, resolvers } ) with STORE_NAME 'editorial-checklist/store', then calls register( store )."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "In src/store/reducer.js the reducer has no side effects and returns new objects. It handles RECEIVE_ITEMS, TOGGLE_ITEM, RESET_ITEMS and also SET_DONE_ITEMS and RECEIVE_ERROR."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/selectors.js defines getItems, getIncompleteRequiredItems (memoized with createSelector) and getProgress, which returns a percentage."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "src/store/resolvers.js exports a getItems thunk, async ( { dispatch } ), that calls apiFetch( { path: '/editorial-checklist/v1/items' } ). Its name matches the getItems selector."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "In includes/rest.php, rest_permissions_check checks current_user_can( 'edit_posts' ). In includes/items.php, get_items() passes the defaults through apply_filters( 'editorial_checklist_items', ... )."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/meta.php registers _editorial_checklist with register_post_meta using type 'array', single true, an auth_callback (auth_meta, which checks edit_post) and show_in_rest['schema'] of type array with string items."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "In src/hooks/use-checklist.js, useChecklistMeta calls useEntityProp( 'postType', postType, 'meta', postId ) and writes the done ids back with setMeta. ChecklistSync loads the meta into the store with setDoneItems."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "In src/index.js the PluginSidebar renders ChecklistSidebar, which shows a CheckboxControl for each item and a ProgressBar with value={ progress }."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "In src/index.js, PluginPrePublishPanel wraps PrePublishChecklist, which lists the incomplete required items from getIncompleteRequiredItems."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "src/components/checklist-sync.js calls lockPostSaving( LOCK_NAME ) and unlockPostSaving( LOCK_NAME ) with the name 'editorial-checklist' inside a useEffect that depends on incompleteCount."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "In checklist-sync.js, createNotice( 'warning', ..., { id: NOTICE_ID } ) is sent to the notices store, and removeNotice( NOTICE_ID ) runs when everything required is done and when the component unmounts."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "useSelect and useDispatch are always passed store descriptors (checklistStore, editorStore, noticesStore). hasFinishedResolution( 'getItems', [] ) is used correctly."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/assets.php hooks into enqueue_block_editor_assets and enqueues build/index.js with the dependencies and version from build/index.asset.php."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "No invented APIs: PluginSidebarMoreMenuItem and PluginPrePublishPanel come from @wordpress/editor; ProgressBar, createSelector, the accessibleWhenDisabled prop and __nextHasNoMarginBottom are all real APIs."
+    }
+  ],
+  "invented_apis": [],
+  "total": 15,
+  "max": 15,
+  "judge_cost_usd": 0.2399356
+}

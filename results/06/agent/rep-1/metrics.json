@@ -1,0 +1,52 @@
+{
+  "prompt": "06",
+  "arm": "agent",
+  "rep": "rep-1",
+  "duration_ms": 94841,
+  "duration_api_ms": 94529,
+  "wall_ms": 95719,
+  "num_turns": 11,
+  "total_cost_usd": 0.4377586,
+  "tokens": {
+    "input": 10,
+    "output": 11524,
+    "cache_read": 121313,
+    "cache_creation": 22872,
+    "total": 155719
+  },
+  "main_session_tokens": 155719,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 10,
+      "outputTokens": 11524,
+      "cacheReadInputTokens": 121313,
+      "cacheCreationInputTokens": 22872,
+      "webSearchRequests": 0,
+      "costUSD": 0.4377586,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1459,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 22872,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 0,
+    "main": 0,
+    "subagent": 0,
+    "unique_urls": []
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "flags": [
+    "docs-lookup agent was never called"
+  ]
+}

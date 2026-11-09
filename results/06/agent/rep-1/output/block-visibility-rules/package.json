@@ -1,0 +1,25 @@
+{
+	"name": "block-visibility-rules",
+	"version": "1.0.0",
+	"description": "Adds a Visibility setting to every block.",
+	"author": "Seth",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"private": true,
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style",
+		"format": "wp-scripts format",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"files": [
+		"build",
+		"block-visibility-rules.php",
+		"readme.txt"
+	],
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

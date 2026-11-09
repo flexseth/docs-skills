@@ -1,0 +1,15 @@
+{
+  "php_lint_errors": 0,
+  "phpcs_errors": null,
+  "phpcs_warnings": null,
+  "build_ok": null,
+  "plugin_check_errors": null,
+  "skipped": {
+    "phpcs": "WordPress standard not installed for phpcs",
+    "build": "set SCORE_BUILD=1 to run npm install + build",
+    "plugin_check": "set WP_PATH to a local WordPress install with plugin-check active"
+  },
+  "details": {
+    "php_lint": []
+  }
+}

@@ -1,0 +1,32 @@
+.wp-block-team-directory-list {
+	.team-directory-list__items {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+		gap: 1rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.team-directory-list__item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 1rem;
+		border: 1px solid currentColor;
+		border-radius: 4px;
+	}
+
+	.team-directory-list__name {
+		font-weight: 600;
+	}
+
+	.team-directory-list__role {
+		font-size: 0.9em;
+	}
+
+	.team-directory-list__since {
+		font-size: 0.8em;
+		opacity: 0.75;
+	}
+}

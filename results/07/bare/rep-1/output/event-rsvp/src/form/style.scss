@@ -1,0 +1,62 @@
+.event-rsvp-form {
+	box-sizing: border-box;
+
+	.event-rsvp-form__field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25em;
+		margin: 0 0 1em;
+	}
+
+	input[type="text"],
+	input[type="email"],
+	select {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 28rem;
+		padding: 0.5em;
+		font: inherit;
+	}
+
+	[aria-invalid="true"] {
+		border-color: #cc1818;
+	}
+
+	.event-rsvp-form__error {
+		color: #cc1818;
+		font-size: 0.875em;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	.event-rsvp-form__hp {
+		position: absolute !important;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
+	.event-rsvp-form__submit[disabled] {
+		opacity: 0.6;
+		cursor: wait;
+	}
+
+	.event-rsvp-form__message {
+		margin-top: 1em;
+
+		&:empty {
+			display: none;
+		}
+
+		&.is-success {
+			color: #007017;
+		}
+
+		&.is-error {
+			color: #cc1818;
+		}
+	}
+}

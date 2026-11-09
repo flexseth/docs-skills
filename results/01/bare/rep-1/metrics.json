@@ -1,0 +1,69 @@
+{
+  "prompt": "01",
+  "arm": "bare",
+  "rep": "rep-1",
+  "duration_ms": 146942,
+  "duration_api_ms": 145729,
+  "wall_ms": 147852,
+  "num_turns": 20,
+  "total_cost_usd": 0.5961065,
+  "tokens": {
+    "input": 9386,
+    "output": 17884,
+    "cache_read": 213877,
+    "cache_creation": 28027,
+    "total": 269174
+  },
+  "main_session_tokens": 258291,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 20,
+      "outputTokens": 16367,
+      "cacheReadInputTokens": 213877,
+      "cacheCreationInputTokens": 28027,
+      "webSearchRequests": 0,
+      "costUSD": 0.5944114,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 3432,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 28027,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 9366,
+      "outputTokens": 1517,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0016951,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 890,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 1,
+    "main": 1,
+    "subagent": 0,
+    "unique_urls": [
+      "https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/core-concepts/server-side-rendering/"
+    ]
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "flags": []
+}

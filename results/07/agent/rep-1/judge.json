@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "class-event-rsvp-ajax.php init() hooks both wp_ajax_event_rsvp_submit and wp_ajax_nopriv_event_rsvp_submit to submit()."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "event-rsvp.php event_rsvp_register_block() builds a config with ajaxUrl => admin_url('admin-ajax.php') and nonce => wp_create_nonce('event_rsvp_submit'), then adds it to every view_script_handle with wp_add_inline_script(..., 'before')."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "Event_RSVP_Ajax::submit() calls check_ajax_referer('event_rsvp_submit', 'nonce'), which matches the action used to create the nonce and the 'nonce' field that view.js appends."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "submit() runs sanitize_text_field on name, sanitize_email plus is_email on email, and absint on guests with a 1\u2013EVENT_RSVP_MAX_GUESTS (5) range check, and returns errors with wp_send_json_error() (400/409/500)."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "Event_RSVP_DB::install() is the register_activation_hook callback; it requires wp-admin/includes/upgrade.php, uses $wpdb->get_charset_collate(), puts two spaces in 'PRIMARY KEY  (id)' and calls dbDelta()."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "Event_RSVP_DB::insert() calls $wpdb->insert() with the formats array('%d','%s','%s','%d','%s'), and table() builds the name with $wpdb->prefix."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "Event_RSVP_Admin::menu() calls add_management_page(..., 'manage_options', 'event-rsvps', ...)."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "Event_RSVP_List_Table extends WP_List_Table and defines prepare_items, get_columns, get_sortable_columns, column_cb, get_bulk_actions (delete) and column renderers."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "process_actions() calls check_admin_referer(self::BULK_NONCE, self::BULK_FIELD), which matches wp_nonce_field in render_page, checks current_user_can('manage_options'), and Event_RSVP_DB::delete() runs $wpdb->prepare with %d placeholders."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "export_csv() is hooked on admin_post_event_rsvp_export; it checks capability, calls check_admin_referer with its own export nonce, sends nocache_headers plus Content-Type and Content-Disposition headers, streams fputcsv output and exits."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "Event_RSVP_Bindings::register() runs on init and calls register_block_bindings_source('event-rsvp/count', [label, get_value_callback, uses_context => ['postId']]); get_value reads $block_instance->context['postId']."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "view.js onSubmit() posts FormData via window.fetch with action and nonce, then shows the success message or per-field and general error messages."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "render.php escapes output with esc_attr, esc_html and wp_kses on the heading, and uses get_block_wrapper_attributes; the list table columns use esc_html, esc_url and esc_attr throughout."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used (register_block_bindings_source with uses_context, view_script_handles, is_post_type_viewable, wp_unique_id, antispambot, add_screen_option, etc.) exists in WordPress; none are invented."
+    }
+  ],
+  "invented_apis": [],
+  "total": 15,
+  "max": 15,
+  "judge_cost_usd": 0.2957716
+}

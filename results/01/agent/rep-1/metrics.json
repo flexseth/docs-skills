@@ -1,0 +1,94 @@
+{
+  "prompt": "01",
+  "arm": "agent",
+  "rep": "rep-1",
+  "duration_ms": 185520,
+  "duration_api_ms": 183472,
+  "wall_ms": 186387,
+  "num_turns": 13,
+  "total_cost_usd": 0.666615725,
+  "tokens": {
+    "input": 1712,
+    "output": 22551,
+    "cache_read": 183740,
+    "cache_creation": 57919,
+    "total": 265922
+  },
+  "main_session_tokens": 205748,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 12,
+      "outputTokens": 17686,
+      "cacheReadInputTokens": 157140,
+      "cacheCreationInputTokens": 30910,
+      "webSearchRequests": 0,
+      "costUSD": 0.632476,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 7561,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 30910,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-sonnet-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 1643,
+      "cacheReadInputTokens": 10685,
+      "cacheCreationInputTokens": 4762,
+      "webSearchRequests": 0,
+      "costUSD": 0.029419499999999998,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 227,
+      "cacheCreationEphemeral5mInputTokens": 4762,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-sonnet-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 1692,
+      "outputTokens": 3222,
+      "cacheReadInputTokens": 15915,
+      "cacheCreationInputTokens": 22247,
+      "webSearchRequests": 0,
+      "costUSD": 0.004720225,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1285,
+      "cacheCreationEphemeral5mInputTokens": 22247,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5",
+    "claude-sonnet-5-5"
+  ],
+  "fetches": {
+    "total": 8,
+    "main": 0,
+    "subagent": 8,
+    "unique_urls": [
+      "https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/api-reference/?output_format=md",
+      "https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/core-concepts/understanding-global-state-local-context-and-derived-state/?output_format=md",
+      "https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/core-concepts/undestanding-global-state-local-context-and-derived-state/?output_format=md",
+      "https://developer.wordpress.org/reference/functions/wp_interactivity_state/?output_format=md",
+      "https://github.com/WordPress/gutenberg/tree/trunk/docs/reference-guides/interactivity-api/core-concepts",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/docs/reference-guides/interactivity-api/core-concepts/understanding-global-state-local-context-derived-state-and-config.md",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/docs/reference-guides/interactivity-api/core-concepts/undestanding-global-state-local-context-and-derived-state.md"
+    ]
+  },
+  "agent_calls": {
+    "docs_lookup": 1,
+    "other": 1
+  },
+  "flags": [
+    "other sub-agents used: ['web-fetch']"
+  ]
+}

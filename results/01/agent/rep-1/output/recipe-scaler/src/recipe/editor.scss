@@ -1,0 +1,23 @@
+/**
+ * Editor-only styles.
+ */
+.wp-block-recipe-scaler-recipe {
+	.recipe-scaler__servings-note {
+		margin-top: 0;
+		opacity: 0.75;
+	}
+
+	.recipe-scaler__editor-list {
+		margin: 0 0 1em;
+		padding: 0;
+		list-style: none;
+	}
+
+	.recipe-scaler__editor-row {
+		display: grid;
+		grid-template-columns: 6em 7em 1fr auto;
+		gap: 8px;
+		align-items: end;
+		margin-bottom: 8px;
+	}
+}

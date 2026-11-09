@@ -1,0 +1,86 @@
+{
+  "prompt": "00",
+  "arm": "agent",
+  "rep": "rep-1",
+  "duration_ms": 40702,
+  "duration_api_ms": 39246,
+  "wall_ms": 42069,
+  "num_turns": 8,
+  "total_cost_usd": 0.2070869,
+  "tokens": {
+    "input": 3502,
+    "output": 4975,
+    "cache_read": 56640,
+    "cache_creation": 17976,
+    "total": 83093
+  },
+  "main_session_tokens": 71586,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 6,
+      "outputTokens": 3186,
+      "cacheReadInputTokens": 53862,
+      "cacheCreationInputTokens": 14532,
+      "webSearchRequests": 0,
+      "costUSD": 0.1907724,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 291,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 14532,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-sonnet-5-5": {
+      "inputTokens": 4,
+      "outputTokens": 650,
+      "cacheReadInputTokens": 2778,
+      "cacheCreationInputTokens": 3444,
+      "webSearchRequests": 0,
+      "costUSD": 0.0153958,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 0,
+      "cacheCreationEphemeral5mInputTokens": 3444,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-sonnet-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 3492,
+      "outputTokens": 1139,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0009187,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 647,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5",
+    "claude-sonnet-5-5"
+  ],
+  "fetches": {
+    "total": 1,
+    "main": 0,
+    "subagent": 1,
+    "unique_urls": [
+      "https://developer.wordpress.org/block-editor/reference-guides/components/textarea-control/?output_format=md"
+    ]
+  },
+  "agent_calls": {
+    "docs_lookup": 1,
+    "other": 0
+  },
+  "flags": []
+}

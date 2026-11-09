@@ -1,0 +1,27 @@
+{
+	"name": "maintenance-banner",
+	"version": "1.0.0",
+	"description": "Scheduled maintenance banner with a Settings API page and block editor sidebar.",
+	"author": "Maintenance Banner Contributors",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"private": true,
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"files": [
+		"build",
+		"includes",
+		"maintenance-banner.php",
+		"uninstall.php",
+		"readme.txt"
+	],
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

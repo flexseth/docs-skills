@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/class-smart-media-markup.php registers render_block_core/image, render_block_core/gallery and render_block_core/cover with priority 10 and 2 accepted args. render_image( $block_content, $block ) reads $block['attrs']. render_media( $block_content ) leaves out the unused $block parameter, which is valid PHP."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "In class-smart-media-markup-processor.php, every transform runs through WP_HTML_Tag_Processor or WP_HTML_Processor::create_fragment. preg_* is used only on text already pulled out of the HTML (whitespace cleanup) and to split rel tokens, never to parse HTML."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "process() sets decoding to async only inside `if ( null === $processor->get_attribute( 'decoding' ) )`."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "get_caption_text_with_html_processor() walks tokens with next_token() and get_breadcrumbs(), checks for FIGCAPTION, and collects get_modifiable_text() from text nodes. If the HTML Processor fails it falls back to a Tag Processor token walk. The caption is read only when caption_as_alt is true, and alt is set only when is_empty_alt() passes."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "get_modifiable_text() returns decoded plain text with tags left out. The result goes straight into set_attribute( 'alt', $caption ) with no esc_attr, so nothing is escaped twice."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "process() calls $processor->add_class( self::FIGURE_CLASS ) ('has-smart-media') on the first FIGURE tag. It also handles the legacy markup where the figure sits inside a leading div.wp-block-image."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "get_site_host() uses wp_parse_url( home_url(), PHP_URL_HOST ), and is_external_url() compares hosts without case sensitivity. merge_rel() keeps the existing rel tokens and adds noopener only if no token already matches it (case-insensitive check)."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "process() returns $processor->get_updated_html()."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "register_attribute() is hooked to register_block_type_args, returns early unless the block is 'core/image', and adds smartMediaCaptionAsAlt as a boolean attribute defaulting to false."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "In src/index.js, addCaptionAsAltAttribute is added to blocks.registerBlockType and returns the settings unchanged unless name is 'core/image'."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "withCaptionAsAltControl is built with createHigherOrderComponent and added to editor.BlockEdit. For core/image only, it renders InspectorControls containing a PanelBody with a ToggleControl."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "enqueue_editor_assets() runs on enqueue_block_editor_assets. It requires build/index.asset.php and passes its dependencies and version to wp_enqueue_script, then calls wp_set_script_translations."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "tests/test-smart-media-markup-processor.php has data providers with input and expected output for decoding, caption-as-alt, the figure class and external-link rel. It also has integration tests for attribute registration and the render filter."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used exists in WordPress or Gutenberg. This includes has_class, next_token, get_token_type, get_modifiable_text, get_breadcrumbs, get_last_error, create_fragment, get_attribute_names_with_prefix, is_tag_closer, rest_sanitize_boolean and the ToggleControl prop __nextHasNoMarginBottom."
+    }
+  ],
+  "invented_apis": [],
+  "total": 15,
+  "max": 15,
+  "judge_cost_usd": 0.2565236
+}

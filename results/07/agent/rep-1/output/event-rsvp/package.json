@@ -1,0 +1,27 @@
+{
+	"name": "event-rsvp",
+	"version": "1.0.0",
+	"description": "RSVP form block with admin list, CSV export and a Block Bindings source.",
+	"author": "Event RSVP",
+	"license": "GPL-2.0-or-later",
+	"main": "build/form/index.js",
+	"files": [
+		"build",
+		"includes",
+		"event-rsvp.php",
+		"uninstall.php",
+		"readme.txt"
+	],
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

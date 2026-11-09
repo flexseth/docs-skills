@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/settings.php add_settings_page() calls add_options_page() with 'manage_options' on admin_menu."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/options.php register_option() calls register_setting() for MAINTENANCE_BANNER_OPTION with 'type' => 'object', 'sanitize_callback' => sanitize_options and 'default' => get_defaults()."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/options.php get_schema() sets 'show_in_rest' => ['schema' => ...] and gives properties for enabled, message, background_color, start, end and hidden_roles (with items)."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/settings.php registers the section and six fields with add_settings_section()/add_settings_field(), and render_settings_page() posts to options.php using settings_fields('maintenance_banner') and do_settings_sections(PAGE_SLUG)."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/options.php sanitize_options() runs rest_sanitize_boolean() to bool, wp_kses() with get_allowed_html(), sanitize_hex_color(), validates datetimes with sanitize_datetime()/parse_datetime(), and does array_intersect() of roles with array_keys(wp_roles()->get_names())."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/options.php calls add_settings_error() when $end < $start and puts back $old['start']/$old['end']."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/settings.php field callbacks use esc_attr(), esc_textarea(), esc_html() and checked(..., false)."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "src/index.js imports registerPlugin from @wordpress/plugins and PluginSidebar from @wordpress/editor, and registers 'maintenance-banner'."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "src/index.js uses useEntityRecord('root','site') (editedRecord, edit, hasEdits) and saveEditedEntityRecord('root','site', undefined, { throwOnError: true })."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "src/index.js MaintenanceBannerSidebar gates on useSelect(select(coreStore).canUser('update', { kind: 'root', name: 'site' })) and returns null without it; PHP also checks current_user_can('manage_options') before enqueueing."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/frontend.php hooks render_banner to wp_body_open, and should_display_banner() checks enabled, compares current_datetime() with dates parsed using wp_timezone(), and compares user roles against hidden_roles."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/frontend.php render_banner() outputs the message with wp_kses(nl2br(...), get_allowed_html()) and the colour style through sanitize_hex_color() plus esc_attr()."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "uninstall.php checks defined('WP_UNINSTALL_PLUGIN') and calls delete_option('maintenance_banner_options'), also looping over sites on multisite."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used exists in WordPress/Gutenberg (current_datetime, wp_timezone_string, translate_user_role, isSavingEntityRecord, canUser with an entity object, accessibleWhenDisabled, __nextHasNoMarginBottom)."
+    }
+  ],
+  "invented_apis": [],
+  "total": 15,
+  "max": 15,
+  "judge_cost_usd": 0.2244836
+}

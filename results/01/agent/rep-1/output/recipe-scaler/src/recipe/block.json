@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "recipe-scaler/recipe",
+	"version": "1.0.0",
+	"title": "Recipe Scaler",
+	"category": "widgets",
+	"icon": "carrot",
+	"description": "A recipe with ingredients that rescale when visitors change the number of servings.",
+	"keywords": [ "recipe", "ingredients", "servings", "cooking" ],
+	"textdomain": "recipe-scaler",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"servings": {
+			"type": "number",
+			"default": 4
+		},
+		"ingredients": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"quantity": {
+						"type": "number"
+					},
+					"unit": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

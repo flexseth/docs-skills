@@ -1,0 +1,23 @@
+/**
+ * Editor-only styles.
+ */
+.wp-block-recipe-scaler-recipe {
+	.recipe-scaler__editor-ingredients {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.recipe-scaler__editor-row {
+		width: 100%;
+	}
+
+	.recipe-scaler__editor-quantity {
+		width: 8em;
+	}
+
+	.recipe-scaler__editor-unit {
+		width: 6em;
+	}
+}

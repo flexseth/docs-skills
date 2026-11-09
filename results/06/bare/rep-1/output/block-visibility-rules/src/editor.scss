@@ -1,0 +1,35 @@
+/**
+ * Editor-only styles for Block Visibility Rules.
+ *
+ * Loaded inside the (iframed) editor canvas so blocks that carry a
+ * visibility rule are easy to spot.
+ */
+
+.has-visibility-rule {
+	outline: 2px dashed var(--wp-admin-theme-color, #3858e9);
+	outline-offset: 2px;
+
+	// Keep the selection outline from core visible when the block is selected.
+	&.is-selected,
+	&.is-highlighted {
+		outline-style: solid;
+	}
+}
+
+.block-visibility-rules-panel__date {
+	margin: 0 0 16px;
+	padding: 0;
+	border: 0;
+
+	legend {
+		margin-bottom: 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 1.4;
+		text-transform: uppercase;
+	}
+}
+
+.block-visibility-rules-panel__clear {
+	margin-top: 8px;
+}

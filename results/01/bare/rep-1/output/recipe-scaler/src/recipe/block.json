@@ -1,0 +1,65 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "recipe-scaler/recipe",
+	"version": "1.0.0",
+	"title": "Recipe Scaler",
+	"category": "widgets",
+	"icon": "carrot",
+	"description": "A recipe with ingredients that rescale when visitors change the number of servings.",
+	"keywords": [ "recipe", "ingredients", "servings" ],
+	"textdomain": "recipe-scaler",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"servings": {
+			"type": "number",
+			"default": 4
+		},
+		"ingredients": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"quantity": { "type": "string" },
+					"unit": { "type": "string" },
+					"name": { "type": "string" }
+				}
+			}
+		}
+	},
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"title": "Pancakes",
+			"servings": 4,
+			"ingredients": [
+				{ "quantity": "200", "unit": "g", "name": "flour" },
+				{ "quantity": "2", "unit": "", "name": "eggs" },
+				{ "quantity": "300", "unit": "ml", "name": "milk" }
+			]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}

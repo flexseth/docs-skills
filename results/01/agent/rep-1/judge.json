@@ -1,0 +1,98 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "src/recipe/block.json has apiVersion 3, \"render\": \"file:./render.php\", \"viewScriptModule\": \"file:./view.js\" and supports.interactivity: true."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "recipe-scaler.php calls register_block_type( __DIR__ . '/build/recipe' ) inside recipe_scaler_register_block, which is hooked to 'init'."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "block.json defines title (string, ''), servings (number, 4) and ingredients (array of objects with quantity/unit/name, default [])."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "edit.js uses RichText for the title and __experimentalNumberControl inside InspectorControls > PanelBody for servings; ingredients can be edited in the canvas with NumberControl/TextControl, and add/remove Buttons are included."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "view.js imports { store, getContext } from '@wordpress/interactivity' and defines store('recipe-scaler') with getters state.isMinimum and state.scaledQuantity and actions increase/decrease."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "render.php puts data-wp-interactive=\"recipe-scaler\" on the wrapper div."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "render.php calls wp_interactivity_data_wp_context( $recipe_scaler_context ) on the wrapper and gives each li its own index context the same way."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "The buttons have data-wp-on--click=\"actions.decrease\" and data-wp-on--click=\"actions.increase\"."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "data-wp-text=\"context.servings\" is on the output element and data-wp-text=\"state.scaledQuantity\" on each quantity span."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "The \u2212 button has data-wp-bind--disabled=\"state.isMinimum\" (servings <= 1), and disabled() renders the attribute on the server."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "render.php calls wp_interactivity_state('recipe-scaler', ...) with closures that use wp_interactivity_get_context(), and prints the initial servings and formatted quantities on the server."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "view.js formatQuantity uses Math.round((q+EPSILON)*100)/100, and PHP recipe_scaler_format_quantity uses round($q, 2)."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "render.php escapes with esc_html, esc_attr_e, esc_html_e, wp_kses_post for the title and get_block_wrapper_attributes for the wrapper, and sanitizes ingredients first."
+    },
+    {
+      "id": 14,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used exists in WordPress/Gutenberg, including wp_interactivity_state, wp_interactivity_get_context, wp_interactivity_data_wp_context, disabled(), __experimentalNumberControl, store and getContext."
+    },
+    {
+      "id": 15,
+      "points": 1,
+      "max": 1,
+      "reason": "package.json lists @wordpress/scripts in devDependencies, and its build/start scripts pass --experimental-modules."
+    }
+  ],
+  "invented_apis": [],
+  "total": 16,
+  "max": 16,
+  "judge_cost_usd": 0.256416
+}

@@ -1,0 +1,25 @@
+.editorial-checklist-sidebar__progress {
+	margin-bottom: 16px;
+
+	.components-progress-bar__track {
+		width: 100%;
+		max-width: none;
+	}
+}
+
+.editorial-checklist-sidebar__progress-label {
+	margin: 8px 0 0;
+	color: #757575;
+	font-size: 12px;
+}
+
+.editorial-checklist-sidebar__list,
+.editorial-checklist-prepublish__list {
+	margin: 0 0 16px;
+	padding: 0;
+	list-style: none;
+
+	li {
+		margin-bottom: 12px;
+	}
+}

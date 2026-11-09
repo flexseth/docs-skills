@@ -1,0 +1,12 @@
+.wp-block-event-rsvp-form {
+	.event-rsvp-form__fields {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+		max-width: 28rem;
+	}
+
+	.event-rsvp-form__submit {
+		align-self: flex-start;
+	}
+}

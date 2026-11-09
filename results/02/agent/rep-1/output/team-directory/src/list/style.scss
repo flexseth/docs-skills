@@ -1,0 +1,27 @@
+.wp-block-team-directory-list {
+	&__items {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__item {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25em 0.75em;
+		align-items: baseline;
+		padding: 0.5em 0;
+		border-bottom: 1px solid currentColor;
+		border-bottom-color: rgba(0, 0, 0, 0.1);
+	}
+
+	&__name {
+		font-weight: 600;
+	}
+
+	&__role,
+	&__since {
+		font-size: 0.875em;
+		opacity: 0.8;
+	}
+}

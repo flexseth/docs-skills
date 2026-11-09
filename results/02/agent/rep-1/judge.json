@@ -1,0 +1,98 @@
+{
+  "criteria": [
+    {
+      "id": 1,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/post-type.php registers `team_member` with 'show_in_rest' => true and 'custom-fields' in supports."
+    },
+    {
+      "id": 2,
+      "points": 1,
+      "max": 1,
+      "reason": "includes/post-type.php registers both meta keys with register_post_meta(). `role` is a string and `start_year` an integer, both have single => true, show_in_rest, and auth_callback 'team_directory_meta_auth', which calls current_user_can( 'edit_post' )."
+    },
+    {
+      "id": 3,
+      "points": 1,
+      "max": 1,
+      "reason": "team-directory.php hooks team_directory_register_rest_routes to rest_api_init. The controller's register_routes() calls register_rest_route with $this->namespace = 'team-directory/v1'."
+    },
+    {
+      "id": 4,
+      "points": 1,
+      "max": 1,
+      "reason": "get_collection_params() in class-team-directory-rest-controller.php defines role, page and per_page. Each has a type, a sanitize_callback (sanitize_text_field or absint) and validate_callback 'rest_validate_request_arg', and per_page sets 'maximum' => 50."
+    },
+    {
+      "id": 5,
+      "points": 1,
+      "max": 1,
+      "reason": "The GET route's permission_callback is get_items_permissions_check(), which returns true, so public reads are allowed and the callback is not missing."
+    },
+    {
+      "id": 6,
+      "points": 1,
+      "max": 1,
+      "reason": "get_items() calls $response->header( 'X-WP-Total', ... ) and $response->header( 'X-WP-TotalPages', ... ) on the WP_REST_Response returned by rest_ensure_response()."
+    },
+    {
+      "id": 7,
+      "points": 1,
+      "max": 1,
+      "reason": "Both routes set 'schema' => array( $this, 'get_public_item_schema' ), and get_item_schema() defines a draft-04 object schema with typed properties."
+    },
+    {
+      "id": 8,
+      "points": 1,
+      "max": 1,
+      "reason": "The POST route pattern is '/members/(?P<id>\\d+)/role'. update_role_permissions_check() checks current_user_can( 'edit_post', $post->ID ) and returns a WP_Error with rest_authorization_required_code() if the check fails."
+    },
+    {
+      "id": 9,
+      "points": 1,
+      "max": 1,
+      "reason": "The role arg is cleaned by its sanitize_text_field sanitize_callback, update_role() calls update_post_meta(), and get_member() returns WP_Error 'rest_post_invalid_id' with status 404 for an invalid or non-team_member ID."
+    },
+    {
+      "id": 10,
+      "points": 1,
+      "max": 1,
+      "reason": "src/list/edit.js calls apiFetch( { path: addQueryArgs( '/team-directory/v1/members', query ) } )."
+    },
+    {
+      "id": 11,
+      "points": 1,
+      "max": 1,
+      "reason": "src/list/edit.js renders a SelectControl that filters by role and shows <Spinner /> while isLoading is true. State and fetching use useState and useEffect."
+    },
+    {
+      "id": 12,
+      "points": 1,
+      "max": 1,
+      "reason": "block.json sets render 'file:./render.php'. render.php escapes output with esc_url, esc_html and esc_html_e, and uses get_block_wrapper_attributes()."
+    },
+    {
+      "id": 13,
+      "points": 1,
+      "max": 1,
+      "reason": "src/sidebar/index.js registers the panel with registerPlugin and returns null unless getCurrentPostType() is 'team_member'. The PHP side also enqueues the script only on team_member screens."
+    },
+    {
+      "id": 14,
+      "points": 1,
+      "max": 1,
+      "reason": "src/sidebar/index.js uses useEntityProp( 'postType', postType, 'meta' ) and updates meta with setMeta( { ...meta, [ key ]: value } )."
+    },
+    {
+      "id": 15,
+      "points": 2,
+      "max": 2,
+      "reason": "Every API used exists: PluginDocumentSettingPanel from @wordpress/editor, the editor store's getCurrentPostType, useEntityProp, the __next40pxDefaultSize and __nextHasNoMarginBottom props, and the WP_REST_Controller methods."
+    }
+  ],
+  "invented_apis": [],
+  "total": 16,
+  "max": 16,
+  "judge_cost_usd": 0.2230916
+}

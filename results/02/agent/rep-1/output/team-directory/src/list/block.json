@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "team-directory/list",
+	"version": "1.0.0",
+	"title": "Team Directory",
+	"category": "widgets",
+	"icon": "groups",
+	"description": "Lists team members, optionally filtered by role.",
+	"keywords": [ "team", "staff", "members" ],
+	"textdomain": "team-directory",
+	"attributes": {
+		"role": {
+			"type": "string",
+			"default": ""
+		},
+		"perPage": {
+			"type": "integer",
+			"default": 10
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
