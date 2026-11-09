@@ -24,7 +24,9 @@ def parse(path: Path) -> dict:
             meta[key.strip()] = value.strip()
 
     name = meta.pop("name", path.stem)
-    agent = {"description": meta["description"], "prompt": body.strip()}
+    # The agent runs from a temp dir, so point it at the helper script by absolute path.
+    helper = (path.parent / "wp-docs.py").resolve()
+    agent = {"description": meta["description"], "prompt": body.strip().replace("{{WP_DOCS_PY}}", str(helper))}
     if meta.get("model"):
         agent["model"] = meta["model"]
     if meta.get("tools"):
