@@ -75,9 +75,13 @@ Each run writes `results/<prompt>/<arm>/rep-<n>/`:
 
 ## Prompt rules
 
+Prompts describe outcomes only: what the plugin must do, never which functions or APIs to use. The rubrics then score whether the model chose correct, current APIs.
+
+The first run (`results-v1/`) used prompts that named the APIs. Both arms scored 99%, because the prompts gave away the answers. Its prompts and rubrics are kept alongside it for reference.
+
 Every prompt must:
 
-- need at least 7 WordPress docs across different surfaces
+- depend on at least 7 WordPress docs across different surfaces, listed under "Expected doc surfaces" in its rubric. How many of those the model actually fetches is a measurement, not a target: getting an API right from memory is a valid outcome.
 - include at least 2 docs that aren't general knowledge
 - include at least 1 complex doc:
   - Interactivity API
@@ -102,6 +106,14 @@ Every prompt must:
 
 ## Caveats
 
-- One repeat per prompt is noisy. Use `REPS=2` or more before drawing conclusions.
+- One repeat per prompt is noisy: in v1, identical setups differed by 20–40% in time. Pilot a new setup at `REPS=1` to check it works, then use `REPS=3` for conclusions. To stay inside a 5-hour usage window, split the prompts into batches (the script resumes and skips finished runs):
+
+  ```sh
+  REPS=3 PROMPTS="01 02 03" ./run_all.sh
+  REPS=3 PROMPTS="04 05" ./run_all.sh
+  REPS=3 PROMPTS="06 07" ./run_all.sh
+  ```
+
+- The `agent` arm can only call the docs-lookup sub-agent; the built-in sub-agents are denied.
 - The judge is a model and can be wrong. Spot-check a few `judge.json` files against the code.
 - The `agent` arm can still use WebFetch directly. That is deliberate: it measures whether Opus chooses to delegate.

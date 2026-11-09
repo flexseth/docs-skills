@@ -34,6 +34,10 @@ case "$ARM" in
 	agent)
 		MODEL=opus
 		ARM_ARGS+=( --agents "$( python3 "$HERE/lib/agents_json.py" "$HERE/agents/docs-lookup.md" )" )
+		# Only docs-lookup may run, so the arms differ by exactly one thing.
+		# v1 used the built-in web-fetch agent as a fallback (finding 4).
+		ARM_ARGS+=( --disallowedTools "Agent(web-fetch)" "Agent(general-purpose)" "Agent(claude)"
+			"Agent(Explore)" "Agent(Plan)" "Agent(statusline-setup)" )
 		TOOLS+=( Agent )
 		;;
 	bare)
