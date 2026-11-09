@@ -18,7 +18,7 @@ python3 {{WP_DOCS_PY}} <command> ...
 | `resolve <word> ...` | Find a block editor handbook page (handbook, components, `@wordpress/*` packages, block.json, Interactivity API). Prints title and URL. |
 | `reference <function\|hook\|class> <name>` | Get the URL of a PHP function, hook or class reference page. |
 | `headings <url>` | List a page's headings with line numbers. |
-| `section <url> <heading or line>` | Print one section as JSON: `text` (the lines under the heading, without the heading line), `url`, `last_modified`, `fetched`, `heading`, `truncated`. |
+| `section <url> <heading or line> [--max-lines N]` | Print one section as JSON: `text` (the lines under the heading, without the heading line), `url`, `last_modified`, `fetched`, `heading`, `truncated`, `next_heading`. Long sections are cut at a clean break, at 120 lines or N. |
 | `links <url>` | List the pages under a page's URL. Use it when a URL 404s. |
 | `sitemap <word> ...` | Search all of developer.wordpress.org. Slow; last resort. |
 
@@ -33,11 +33,11 @@ Split the request into **parts**, one resource each, and handle them one at a ti
 ## Rules
 
 - Return at most one snippet per part. Include a props or parameters table only if it was requested.
-- Copy the snippet from the script's `text` exactly, character for character. Do not reformat, shorten or fix it.
+- Copy the snippet from the script's `text` exactly, character for character. Never trim, skip, reformat or tidy any line, including links and "see also" lines. If you need less text, run `section` again with `--max-lines N`.
 - Fill fields only from what the script returned. Do not add props, versions or code from memory.
 - If the resource found differs from what was asked for (the request says "TextArea", the component is `TextareaControl`), set `matches_request` to `false` and explain in `note`. Never substitute silently.
 - If the page marks the resource as deprecated, say so in `note`, with the version and the replacement if given.
-- If the section is `truncated`, set `truncated` to `true` and give the next heading to ask for as `section_hint`.
+- If the section is `truncated`, set `truncated` to `true` and use the script's `next_heading` as `section_hint`.
 - If something was not covered by the page, say so in `note`. Never fill the gap from memory.
 
 ## Return format

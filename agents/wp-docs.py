@@ -11,7 +11,11 @@ Usage:
     wp-docs.py reference <function|hook|class> <name>
                                                  Print the reference URL (no fetch)
     wp-docs.py headings <url>                    List a page's headings with line numbers
-    wp-docs.py section <url> <heading|line>      Print one section, as JSON
+    wp-docs.py section <url> <heading|line> [--max-lines N]
+                                                 Print one section, as JSON. A long section is
+                                                 cut at a blank line outside code blocks (at most
+                                                 120 lines, or N); `next_heading` says where to
+                                                 continue. Never trim `text` by hand.
     wp-docs.py links <url>                       List links to pages under a page's URL
     wp-docs.py sitemap <word> [<word> ...]       Search the developer.wordpress.org sitemaps
 
@@ -22,7 +26,8 @@ Rules enforced here, not left to the caller:
       are served from a temp-dir cache. Set $WP_DOCS_CACHE_DIR to use a
       different directory (the eval gives every run its own, so runs stay dry).
     - Every lookup is appended to $WP_DOCS_LOG (JSON lines), if set, with
-      "cached": true when it came from the cache.
+      "cached": true when it came from the cache. Every section returned is
+      also written to wp-docs-sections.jsonl beside the log.
 
 Run ./test_wp_docs.sh (needs network) to check the cache in both modes.
 
@@ -76,6 +81,16 @@ def log_fetch(url, status, cached):
             handle.write(json.dumps({"url": url, "status": status, "cached": cached, "ts": int(time.time())}) + "\n")
 
 
+def log_section(result):
+    """Record every section returned, next to $WP_DOCS_LOG, as wp-docs-sections.jsonl.
+    The eval compares the agent's snippets against this, so a snippet that is not
+    an exact copy of what the script returned can be flagged."""
+    log = os.environ.get("WP_DOCS_LOG")
+    if log:
+        with open(Path(log).with_name("wp-docs-sections.jsonl"), "a", encoding="utf-8") as handle:
+            handle.write(json.dumps({k: result[k] for k in ("url", "heading", "lines", "text")}, ensure_ascii=False) + "\n")
+
+
 def fetch(url):
     """Fetch a URL as text, with the host allowlist, Markdown parameter and cache."""
     canonical = clean_url(url)
@@ -121,23 +136,43 @@ def plain(text):
     return strip_invisible(re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)).strip()
 
 
+def fence_step(fence, line):
+    """Advance code-fence tracking by one line. `fence` is None outside a code
+    block, else (character, length). Returns (new_fence, line_is_a_fence_marker).
+    Fences can sit inside list items, e.g. " *     ```php"."""
+    marker = re.match(r"^[\s*+\-]*(`{3,}|~{3,})(.*)$", line)
+    if not marker:
+        return fence, False
+    char, length, rest = marker.group(1)[0], len(marker.group(1)), marker.group(2).strip()
+    if fence is None:
+        return (char, length), True
+    if fence[0] == char and length >= fence[1] and not rest:
+        return None, True
+    return fence, True
+
+
 def parse_headings(lines):
     """Return [(line_number, level, text)] for headings outside code fences."""
-    headings, fence = [], None  # fence = (character, length) while inside a code block
+    headings, fence = [], None
     for number, line in enumerate(lines, 1):
-        # Fences can sit inside list items, e.g. " *     ```php".
-        marker = re.match(r"^[\s*+\-]*(`{3,}|~{3,})(.*)$", line)
-        if marker:
-            char, length, rest = marker.group(1)[0], len(marker.group(1)), marker.group(2).strip()
-            if fence is None:
-                fence = (char, length)
-            elif fence[0] == char and length >= fence[1] and not rest:
-                fence = None
-        elif fence is None:
+        fence, is_marker = fence_step(fence, line)
+        if not is_marker and fence is None:
             match = re.match(r"^(#{1,6})\s+(.*\S)\s*$", line)
             if match:
                 headings.append((number, len(match.group(1)), plain(match.group(2))))
     return headings
+
+
+def clean_cut(body, limit):
+    """At most `limit` lines of `body`, cut just before a blank line that is outside
+    any code block, so a snippet never ends inside a code fence or mid-paragraph.
+    Falls back to a hard cut if there is no such blank line."""
+    fence, best = None, None
+    for index, line in enumerate(body[:limit + 1]):
+        fence, is_marker = fence_step(fence, line)
+        if not is_marker and fence is None and index > 0 and not line.strip():
+            best = index
+    return body[:best] if best else body[:limit]
 
 
 def last_modified(text):
@@ -211,7 +246,7 @@ def cmd_headings(url):
         print(f"{number}\t{level}\t{title}")
 
 
-def cmd_section(url, selector):
+def cmd_section(url, selector, max_lines=MAX_SECTION_LINES):
     """Print one section as JSON: the lines under a heading, up to the next heading
     of equal or higher level. `text` excludes the heading line; see `heading`."""
     text = fetch(url)
@@ -239,19 +274,24 @@ def cmd_section(url, selector):
     # invisible characters and a link with ?output_format=md. The cleaned heading
     # is in `heading`. Every other line is returned exactly as it appears.
     body = lines[start:end]
-    truncated = len(body) > MAX_SECTION_LINES
+    truncated = len(body) > max_lines
     if truncated:
-        body = body[:MAX_SECTION_LINES]
+        body = clean_cut(body, max_lines)
+    cut_at = start + len(body)  # line number of the last line returned
+    next_heading = next((t for n, _, t in headings if n > cut_at), "") if truncated else ""
 
-    print(json.dumps({
+    result = {
         "url": clean_url(url),
         "last_modified": last_modified(text),
         "fetched": date.today().isoformat(),
         "heading": title,
-        "lines": [start, start + len(body)],
+        "lines": [start, cut_at],
         "truncated": truncated,
+        "next_heading": next_heading,
         "text": "\n".join(body).strip("\n"),
-    }, indent=2, ensure_ascii=False))
+    }
+    log_section(result)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
 
 
 def cmd_links(url):
@@ -287,7 +327,11 @@ def main(argv):
         "resolve": (cmd_resolve, lambda a: len(a) >= 1, lambda a: (a,)),
         "reference": (cmd_reference, lambda a: len(a) == 2, lambda a: tuple(a)),
         "headings": (cmd_headings, lambda a: len(a) == 1, lambda a: tuple(a)),
-        "section": (cmd_section, lambda a: len(a) == 2, lambda a: tuple(a)),
+        "section": (
+            cmd_section,
+            lambda a: len(a) == 2 or (len(a) == 4 and a[2] == "--max-lines" and a[3].isdigit() and int(a[3]) > 0),
+            lambda a: (a[0], a[1]) if len(a) == 2 else (a[0], a[1], int(a[3])),
+        ),
         "links": (cmd_links, lambda a: len(a) == 1, lambda a: tuple(a)),
         "sitemap": (cmd_sitemap, lambda a: len(a) >= 1, lambda a: (a,)),
     }

@@ -150,6 +150,24 @@ def summarize_run(run: Path) -> dict:
     log_urls = [clean_doc_url(e.get("url", "")) for e in log_entries]
     script_pages = sorted({u for u in log_urls if u and not INDEX_URL.search(u)})
 
+    # Is every snippet the agent returned an exact copy of text the script gave it?
+    sections_file = run / "wp-docs-sections.jsonl"
+    section_texts = [e.get("text", "") for e in read_script_log(sections_file)]
+    snippets = {"total": 0, "verbatim": 0, "not_verbatim": []}
+    for call in agent_calls.values():
+        payload = call.get("response_json")
+        if call["subagent_type"] != "docs-lookup" or not isinstance(payload, dict):
+            continue
+        for item in payload.get("results", [payload] if "snippet" in payload else []):
+            snippet = (item.get("snippet") or "").strip("\n")
+            if not snippet:
+                continue
+            snippets["total"] += 1
+            if any(snippet in text for text in section_texts):
+                snippets["verbatim"] += 1
+            else:
+                snippets["not_verbatim"].append({"key": item.get("key", ""), "chars": len(snippet)})
+
     page_lookups_per_call = {}   # docs-lookup Agent call id -> page-fetching script calls
     for b in script_calls:
         if b["parent"] and b["script_command"] in PAGE_COMMANDS:
@@ -165,6 +183,11 @@ def summarize_run(run: Path) -> dict:
         over = {i: n for i, n in page_lookups_per_call.items() if n > MAX_PAGE_LOOKUPS_PER_CALL}
         if over:
             flags.append(f"docs-lookup exceeded {MAX_PAGE_LOOKUPS_PER_CALL} page lookups in one call: {sorted(over.values())}")
+        if any(b["script_command"] == "section" for b in script_calls) and not section_texts:
+            flags.append("section calls ran but wp-docs-sections.jsonl is empty or missing (snippets cannot be verified)")
+        elif snippets["not_verbatim"]:
+            keys = [s["key"] or "?" for s in snippets["not_verbatim"]]
+            flags.append(f"{len(keys)} snippet(s) are not an exact copy of the script's text: {keys}")
     denied = [b for b in bash_calls.values() if b["denied"]]
     if denied:
         flags.append(f"{len(denied)} Bash call(s) denied by the allowlist (e.g. {denied[0]['command'][:60]!r})")
@@ -230,6 +253,9 @@ def summarize_run(run: Path) -> dict:
             "failed": sum(e.get("status") != 200 for e in log_entries),
             "page_urls": script_pages,
         },
+        # Snippets the agent returned vs the text the script gave it. Anything
+        # not verbatim means the agent edited, dropped or invented text.
+        "snippets": snippets,
         # Distinct docs pages read by any route (WebFetch or the script),
         # excluding the manifest and sitemaps. This is the finding 11 measure.
         "docs_read": len({clean_doc_url(f["url"]) for f in fetches if f["url"]} | set(script_pages)),
@@ -273,6 +299,8 @@ def build_table(root: Path):
             "docs_read": m.get("docs_read", len(m["fetches"].get("unique_urls", []))),
             "script_net": m.get("script", {}).get("network"),
             "script_cached": m.get("script", {}).get("cache_hits"),
+            "snip_ok": m.get("snippets", {}).get("verbatim"),
+            "snip_total": m.get("snippets", {}).get("total"),
             "php_errors": score.get("php_lint_errors"),
             "phpcs_errors": score.get("phpcs_errors"),
             "judge_pct": (100 * judge["total"] / judge["max"]) if judge.get("max") else None,
@@ -284,8 +312,8 @@ def build_table(root: Path):
         "",
         "Means across repeats. Time and cost come from Claude Code's own result event.",
         "",
-        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | PHP lint errs | PHPCS errs | Judge % | Flags |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | Snippets verbatim | PHP lint errs | PHPCS errs | Judge % | Flags |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for (prompt, arm), reps in sorted(rows.items()):
         avg = {k: mean([r[k] for r in reps]) for k in reps[0]}
@@ -293,7 +321,8 @@ def build_table(root: Path):
             f"| {prompt} | {arm} | {len(reps)} | {fmt(avg['secs'], '.0f')} | {fmt(avg['cost'], '.2f')} | "
             f"{fmt(avg['tokens'], ',.0f')} | {fmt(avg['fetch_main'], '.1f')}/{fmt(avg['fetch_sub'], '.1f')} | "
             f"{fmt(avg['lookups'], '.1f')} | {fmt(avg['docs_read'], '.1f')} | "
-            f"{fmt(avg['script_net'], '.1f')}/{fmt(avg['script_cached'], '.1f')} | {fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
+            f"{fmt(avg['script_net'], '.1f')}/{fmt(avg['script_cached'], '.1f')} | "
+            f"{fmt(avg['snip_ok'], '.1f')}/{fmt(avg['snip_total'], '.1f')} | {fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
             f"{fmt(avg['judge_pct'], '.0f')} | {fmt(avg['flags'], '.0f')} |"
         )
 
