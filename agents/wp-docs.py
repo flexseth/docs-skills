@@ -19,8 +19,10 @@ Rules enforced here, not left to the caller:
     - Only developer.wordpress.org and raw.githubusercontent.com are fetched.
     - Pages are fetched as Markdown (?output_format=md), never HTML.
     - A URL is fetched over the network at most once per 10 minutes; repeats
-      are served from a temp-dir cache.
-    - Every network fetch is appended to $WP_DOCS_LOG (JSON lines), if set.
+      are served from a temp-dir cache. Set $WP_DOCS_CACHE_DIR to use a
+      different directory (the eval gives every run its own, so runs stay dry).
+    - Every lookup is appended to $WP_DOCS_LOG (JSON lines), if set, with
+      "cached": true when it came from the cache.
 
 Standard library only. Exit code 0 on success, 1 on any failure (the error is
 printed as JSON on stdout so the caller can record it).
@@ -46,7 +48,8 @@ ALLOWED_HOSTS = {"developer.wordpress.org", "raw.githubusercontent.com"}
 MAX_SECTION_LINES = 120
 CACHE_TTL = 600  # seconds
 MD_PARAM = "output_format=md"
-CACHE_DIR = Path(tempfile.gettempdir()) / f"wp-docs-{os.getuid()}"
+# Override with WP_DOCS_CACHE_DIR to isolate a run (the eval gives each run its own).
+CACHE_DIR = Path(os.environ.get("WP_DOCS_CACHE_DIR") or Path(tempfile.gettempdir()) / f"wp-docs-{os.getuid()}")
 
 
 def fail(message, **extra):
@@ -60,6 +63,15 @@ def clean_url(url):
     parts = urllib.parse.urlsplit(url)
     query = [p for p in parts.query.split("&") if p and not p.startswith("output_format=")]
     return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, "&".join(query), ""))
+
+
+def log_fetch(url, status, cached):
+    """Append one JSON line to $WP_DOCS_LOG, if set. Cache hits are logged too,
+    so the log counts every lookup, not only network calls."""
+    log = os.environ.get("WP_DOCS_LOG")
+    if log:
+        with open(log, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"url": url, "status": status, "cached": cached, "ts": int(time.time())}) + "\n")
 
 
 def fetch(url):
@@ -76,6 +88,7 @@ def fetch(url):
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_file = CACHE_DIR / hashlib.sha256(target.encode()).hexdigest()
     if cache_file.exists() and time.time() - cache_file.stat().st_mtime < CACHE_TTL:
+        log_fetch(target, 200, cached=True)
         return cache_file.read_text(encoding="utf-8")
 
     status, body = None, ""
@@ -88,10 +101,7 @@ def fetch(url):
         status = 0
         body = str(err)
 
-    log = os.environ.get("WP_DOCS_LOG")
-    if log:
-        with open(log, "a", encoding="utf-8") as handle:
-            handle.write(json.dumps({"url": target, "status": status, "ts": int(time.time())}) + "\n")
+    log_fetch(target, status, cached=False)
 
     if status != 200:
         fail("Fetch failed", url=canonical, status=status)
