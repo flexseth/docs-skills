@@ -16,6 +16,17 @@ This project applies the same split to building WordPress plugins with an AI mod
 | "This case has been overruled" | A deprecation note. The agent reported `ProgressBar` as deprecated; the lawyer avoided it. |
 | "I couldn't find it, here is where I looked" | An `unresolved` entry. The agent says what it tried instead of inventing a citation. |
 
+## The premise: pay the lawyer only for lawyering
+
+A law firm doesn't bill partner hours for work in the library. The partner's time is expensive and should go to interpretation and judgment. Finding and copying the right passage is work a junior can do well, and for less.
+
+The same economics apply here. The main model (Opus) is the larger, more expensive one. Looking up a signature or an example is reading and copying, not judgment, so it is handed to a cheaper model (Sonnet). **Delegating work to a cheaper model is the entire premise of this project**, and both halves of it exist to test that idea:
+
+- **The research** asks whether a cheaper model can do the library work reliably enough. That is why the associate is built as it is: it finds pages through fixed sources and quotes them exactly, so the cheap model has little room to be wrong. If the lawyer has to re-check every citation, the savings are gone.
+- **The evaluation** asks whether delegation pays off in practice: faster, cheaper, and just as accurate. It counts every model's usage, including the associate's own tokens, because delegating isn't free. An optional third arm runs the cheaper model alone, to ask whether it could do the whole job without the lawyer.
+
+**This is not proven yet.** In v1 the scores tied, and the time and cost differences were too small to separate from noise: identical setups varied by 20–40% in time between runs. The v2 evaluation is designed to answer the question properly.
+
 ## Why have an associate at all
 
 - **The lawyer's attention is limited.** A model's context window is its attention. A whole documentation page can be 50–80 KB. The associate reads it and returns about 2 KB.
@@ -39,7 +50,7 @@ python3 agents/wp-docs.py section <url> "Heading" --max-lines 40    # one sectio
 
 ## The evaluation
 
-The open question is whether the firm does better work with an associate than with a lawyer who researches alone. Seven plugin-building prompts are run two ways:
+The open question is whether the firm does better work, for less, with an associate than with a lawyer who researches alone. Seven plugin-building prompts are run two ways:
 
 | Arm | Who does the research |
 | --- | --- |
