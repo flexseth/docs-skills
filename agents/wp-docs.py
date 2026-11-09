@@ -14,7 +14,7 @@ Usage:
     wp-docs.py section <url> <heading|line> [--max-lines N]
                                                  Print one section, as JSON. A long section is
                                                  cut at a blank line outside code blocks (at most
-                                                 120 lines, or N); `next_heading` says where to
+                                                 50 lines, or N); `next_heading` says where to
                                                  continue. Never trim `text` by hand.
     wp-docs.py links <url>                       List links to pages under a page's URL
     wp-docs.py sitemap <word> [<word> ...]       Search the developer.wordpress.org sitemaps
@@ -52,7 +52,7 @@ MANIFEST_URL = "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/docs
 HANDBOOK_BASE = "https://developer.wordpress.org/block-editor/"
 SITEMAP_INDEX = "https://developer.wordpress.org/sitemap-index-1.xml"
 ALLOWED_HOSTS = {"developer.wordpress.org", "raw.githubusercontent.com"}
-MAX_SECTION_LINES = 120
+MAX_SECTION_LINES = 50
 CACHE_TTL = 600  # seconds
 MD_PARAM = "output_format=md"
 # Override with WP_DOCS_CACHE_DIR to isolate a run (the eval gives each run its own).

@@ -18,7 +18,7 @@ python3 {{WP_DOCS_PY}} <command> ...
 | `resolve <word> ...` | Find a block editor handbook page (handbook, components, `@wordpress/*` packages, block.json, Interactivity API). Prints title and URL. |
 | `reference <function\|hook\|class> <name>` | Get the URL of a PHP function, hook or class reference page. |
 | `headings <url>` | List a page's headings with line numbers. |
-| `section <url> <heading or line> [--max-lines N]` | Print one section as JSON: `text` (the lines under the heading, without the heading line), `url`, `last_modified`, `fetched`, `heading`, `truncated`, `next_heading`. Long sections are cut at a clean break, at 120 lines or N. |
+| `section <url> <heading or line> [--max-lines N]` | Print one section as JSON: `text` (the lines under the heading, without the heading line), `url`, `last_modified`, `fetched`, `heading`, `truncated`, `next_heading`. Long sections are cut at a clean break, at 50 lines or N. |
 | `links <url>` | List the pages under a page's URL. Use it when a URL 404s. |
 | `sitemap <word> ...` | Search all of developer.wordpress.org. Slow; last resort. |
 
