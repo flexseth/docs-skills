@@ -368,6 +368,7 @@ def build_table(root: Path):
             "snip_reflowed": m.get("snippets", {}).get("reflowed"),
             "snip_total": m.get("snippets", {}).get("total"),
             "php_errors": score.get("php_lint_errors"),
+            "deprecated": score.get("api_deprecated"),
             "phpcs_errors": score.get("phpcs_errors"),
             "judge_pct": (100 * judge["total"] / judge["max"]) if judge.get("max") else None,
             "flags": len(m["flags"]),
@@ -378,8 +379,8 @@ def build_table(root: Path):
         "",
         "Means across repeats. Time and cost come from Claude Code's own result event.",
         "",
-        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | Snippets exact/reflowed/total | PHP lint errs | PHPCS errs | Judge % | Flags |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | Snippets exact/reflowed/total | PHP lint errs | PHPCS errs | Deprecated APIs | Judge % | Flags |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for (prompt, arm), reps in sorted(rows.items()):
         avg = {k: mean([r[k] for r in reps]) for k in reps[0]}
@@ -388,7 +389,7 @@ def build_table(root: Path):
             f"{fmt(avg['tokens'], ',.0f')} | {fmt(avg['fetch_main'], '.1f')}/{fmt(avg['fetch_sub'], '.1f')} | "
             f"{fmt(avg['lookups'], '.1f')} | {fmt(avg['docs_read'], '.1f')} | "
             f"{fmt(avg['script_net'], '.1f')}/{fmt(avg['script_cached'], '.1f')} | "
-            f"{fmt(avg['snip_exact'], '.1f')}/{fmt(avg['snip_reflowed'], '.1f')}/{fmt(avg['snip_total'], '.1f')} |{fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
+            f"{fmt(avg['snip_exact'], '.1f')}/{fmt(avg['snip_reflowed'], '.1f')}/{fmt(avg['snip_total'], '.1f')} | {fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | {fmt(avg['deprecated'], '.1f')} | "
             f"{fmt(avg['judge_pct'], '.0f')} | {fmt(avg['flags'], '.0f')} |"
         )
 

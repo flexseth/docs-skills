@@ -8,6 +8,7 @@ Checks:
   - PHPCS with the WordPress standard (only if installed: `phpcs -i` lists WordPress)
   - npm install + build (only if SCORE_BUILD=1; slow, needs network)
   - Plugin Check (only if WP_PATH points at a local WordPress install with plugin-check active)
+  - API check: deprecated / experimental / not-found WordPress APIs, from current docs (judge_docs.py)
 
 A skipped check is recorded as null with the reason in "skipped".
 """
@@ -109,6 +110,16 @@ def main(run_dir: Path):
         score["details"]["plugin_check"] = checks
     else:
         score["skipped"]["plugin_check"] = "set WP_PATH to a local WordPress install with plugin-check active"
+
+    # 5. WordPress APIs the plugin uses, checked against current docs (deterministic).
+    try:
+        import judge_docs
+        api = judge_docs.load_or_check(run_dir)
+        for status in ("deprecated", "experimental", "not_found", "unverified", "unchecked"):
+            score["api_" + status] = api["summary"].get(status, 0)
+        score["details"]["api_deprecated"] = judge_docs.deprecated_names(api)
+    except Exception as error:  # a docs or network problem must not stop scoring
+        score["skipped"]["api_check"] = f"{type(error).__name__}: {error}"
 
     (run_dir / "score.json").write_text(json.dumps(score, indent=2) + "\n")
     print(json.dumps({k: v for k, v in score.items() if k != "details"}, indent=2))
