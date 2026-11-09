@@ -14,6 +14,7 @@ A skipped check is recorded as null with the reason in "skipped".
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -60,6 +61,28 @@ def build_plugin(plugin: Path) -> dict:
             "build_files": built, "log_tail": out[-2000:]}
 
 
+def parse_plugin_check(out: str):
+    """Counts and issues from `wp plugin check --format=json`, or None if it did not run.
+
+    The output is a "FILE: <path>" line followed by a JSON list of issues, per file, with
+    "Success: ..." when there are none. WP-CLI notices on stderr are ignored."""
+    issues = []
+    for match in re.finditer(r"^FILE: (.+)\n(\[.*\])\s*$", out, re.M):
+        for issue in json.loads(match.group(2)):
+            issues.append({"file": match.group(1), "line": issue.get("line"), "type": issue.get("type"),
+                           "code": issue.get("code"), "message": issue.get("message")})
+    if not issues and "Success" not in out:
+        return None
+    by_code = {}
+    for issue in issues:
+        key = f"{issue['type']} {issue['code']}"
+        by_code[key] = by_code.get(key, 0) + 1
+    return {"errors": sum(i["type"] == "ERROR" for i in issues),
+            "warnings": sum(i["type"] == "WARNING" for i in issues),
+            "by_code": dict(sorted(by_code.items(), key=lambda kv: -kv[1])),
+            "issues": issues[:40]}
+
+
 def plugin_dirs(output: Path):
     return [p for p in output.iterdir() if p.is_dir()] if output.exists() else []
 
@@ -67,7 +90,7 @@ def plugin_dirs(output: Path):
 def main(run_dir: Path):
     output = run_dir / "output"
     score = {"php_lint_errors": None, "phpcs_errors": None, "phpcs_warnings": None,
-             "build_ok": None, "plugin_check_errors": None, "skipped": {}, "details": {}}
+             "build_ok": None, "plugin_check_errors": None, "plugin_check_warnings": None, "skipped": {}, "details": {}}
 
     if not output.exists():
         score["skipped"]["all"] = "no output directory"
@@ -112,21 +135,22 @@ def main(run_dir: Path):
     # 4. Plugin Check
     wp_path = os.environ.get("WP_PATH")
     if wp_path and shutil.which("wp"):
-        plugins_dir = Path(wp_path) / "wp-content/plugins"
-        errors = 0
+        errors = warnings = 0
         checks = {}
         for plugin in plugin_dirs(output):
-            link = plugins_dir / f"eval-{plugin.name}"
-            if link.exists() or link.is_symlink():
-                link.unlink()
-            link.symlink_to(plugin.resolve())
-            try:
-                _, out = run(["wp", "plugin", "check", link.name, f"--path={wp_path}", "--format=json"])
-                checks[plugin.name] = out[-4000:]
-                errors += out.count('"type":"ERROR"')
-            finally:
-                link.unlink()
-        score["plugin_check_errors"] = errors
+            # Checked by path, not by symlinking into wp-content/plugins: Plugin Check derives the
+            # expected text domain from the folder name, so an "eval-" prefix made every plugin fail
+            # it, and this way the site's plugins folder is never touched.
+            _, out = run(["wp", "plugin", "check", str(plugin.resolve()), f"--path={wp_path}", "--format=json"])
+            result = parse_plugin_check(out)
+            if result is None:
+                score["skipped"]["plugin_check"] = f"wp plugin check did not run for {plugin.name}: {out.strip()[-300:]}"
+                errors = warnings = None
+                break
+            checks[plugin.name] = result
+            errors += result["errors"]
+            warnings += result["warnings"]
+        score["plugin_check_errors"], score["plugin_check_warnings"] = errors, warnings
         score["details"]["plugin_check"] = checks
     else:
         score["skipped"]["plugin_check"] = "set WP_PATH to a local WordPress install with plugin-check active"

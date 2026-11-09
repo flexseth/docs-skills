@@ -55,7 +55,7 @@ REPS=3 ARMS="agent bare sonnet" ./run_all.sh
 Optional scoring extras:
 
 - `SCORE_BUILD=1` runs `npm install` + `npm run build` per plugin, in a throwaway copy so `results/` never gains a `node_modules`, and with install scripts skipped (`--ignore-scripts`) because `package.json` was written by a model. It records which step failed, the seconds taken and how many files the build produced. Expect about 80 seconds per plugin (all 14 v1 plugins: 18 minutes, all built), so `SCORE_BUILD=1 ./run_all.sh` adds roughly that to scoring.
-- `WP_PATH=/path/to/wordpress` runs Plugin Check (needs `wp` and the plugin-check plugin active).
+- `WP_PATH=/path/to/wordpress` runs Plugin Check (needs `wp` and the plugin-check plugin active on that site). Each plugin is checked by its own path, so nothing is symlinked into or written to the site's plugins folder (an earlier version symlinked it as `eval-<name>`, and Plugin Check then reported a false text-domain error on every file because it derives the expected domain from the folder name). `score.json` keeps error and warning counts, a per-code breakdown and the first 40 issues. Two cautions: `outdated_tested_upto_header` compares each plugin's "Tested up to" with the site's WordPress version, so compare arms on the same site, not across machines or dates; and Plugin Check scans everything that would ship, `tests/` and `phpunit.xml.dist` included. All 14 v1 plugins ran in about 2 seconds each: 26 errors and 21 warnings in total, 12 of the errors being `outdated_tested_upto_header`.
 - PHPCS runs only if the WordPress standard is installed: `composer global require wp-coding-standards/wpcs`.
 
 ## Results
