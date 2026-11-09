@@ -7,6 +7,7 @@
 
 A run dir is results/<prompt>/<arm>/rep-<n>/.
 """
+import importlib.util
 import json
 import re
 import statistics
@@ -15,6 +16,51 @@ from pathlib import Path
 
 AGENT_TOOL_NAMES = {"Agent", "Task"}
 FETCH_TOOL_NAMES = {"WebFetch"}
+
+
+def _load_fence_step():
+    """Reuse the helper script's code-fence tracking, so both agree on what is code."""
+    path = Path(__file__).resolve().parent / "agents" / "wp-docs.py"
+    spec = importlib.util.spec_from_file_location("wp_docs", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.fence_step
+
+
+fence_step = _load_fence_step()
+
+
+def prose_normalized(text: str) -> str:
+    """Collapse whitespace in prose, keep code blocks exactly as written.
+
+    Reflowing a paragraph is harmless in Markdown, but changing a space inside a
+    code block is not, so only prose is loosened."""
+    out, prose, fence = [], [], None
+
+    def flush():
+        if prose:
+            out.append(" ".join(" ".join(prose).split()))
+            prose.clear()
+
+    for line in text.split("\n"):
+        fence, is_marker = fence_step(fence, line)
+        if is_marker or fence is not None:
+            flush()
+            out.append(line)
+        else:
+            prose.append(line)
+    flush()
+    return "\n".join(out)
+
+
+def classify_snippet(snippet: str, section_texts: list, normalized_sections: list) -> str:
+    """'exact', 'reflowed' (whitespace-only in prose) or 'altered'."""
+    if any(snippet in text for text in section_texts):
+        return "exact"
+    normalized = prose_normalized(snippet).strip()
+    if any(normalized in text for text in normalized_sections):
+        return "reflowed"
+    return "altered"
 
 
 def extract_json_block(text: str):
@@ -160,10 +206,14 @@ def summarize_run(run: Path) -> dict:
     log_urls = [clean_doc_url(e.get("url", "")) for e in log_entries]
     script_pages = sorted({u for u in log_urls if u and not INDEX_URL.search(u)})
 
-    # Is every snippet the agent returned an exact copy of text the script gave it?
+    # How faithful is each snippet the agent returned to the text the script gave it?
+    #   exact    an exact copy
+    #   reflowed identical except whitespace in prose (code blocks must still match)
+    #   altered  anything else: dropped, changed or invented text
     sections_file = run / "wp-docs-sections.jsonl"
     section_texts = [e.get("text", "") for e in read_script_log(sections_file)]
-    snippets = {"total": 0, "verbatim": 0, "not_verbatim": []}
+    normalized_sections = [prose_normalized(t) for t in section_texts]
+    snippets = {"total": 0, "exact": 0, "reflowed": 0, "altered": 0, "reflowed_items": [], "altered_items": []}
     for call in agent_calls.values():
         payload = call.get("response_json")
         if call["subagent_type"] != "docs-lookup" or not isinstance(payload, dict):
@@ -173,10 +223,10 @@ def summarize_run(run: Path) -> dict:
             if not snippet:
                 continue
             snippets["total"] += 1
-            if any(snippet in text for text in section_texts):
-                snippets["verbatim"] += 1
-            else:
-                snippets["not_verbatim"].append({"key": item.get("key", ""), "chars": len(snippet)})
+            tier = classify_snippet(snippet, section_texts, normalized_sections)
+            snippets[tier] += 1
+            if tier != "exact":
+                snippets[f"{tier}_items"].append({"key": item.get("key", ""), "chars": len(snippet)})
 
     page_lookups_per_call = {}   # docs-lookup Agent call id -> page-fetching script calls
     for b in script_calls:
@@ -195,9 +245,13 @@ def summarize_run(run: Path) -> dict:
             flags.append(f"docs-lookup exceeded {MAX_PAGE_LOOKUPS_PER_CALL} page lookups in one call: {sorted(over.values())}")
         if any(b["script_command"] == "section" for b in script_calls) and not section_texts:
             flags.append("section calls ran but wp-docs-sections.jsonl is empty or missing (snippets cannot be verified)")
-        elif snippets["not_verbatim"]:
-            keys = [s["key"] or "?" for s in snippets["not_verbatim"]]
-            flags.append(f"{len(keys)} snippet(s) are not an exact copy of the script's text: {keys}")
+        else:
+            if snippets["altered"]:
+                keys = [s["key"] or "?" for s in snippets["altered_items"]]
+                flags.append(f"{snippets['altered']} snippet(s) ALTERED (text dropped, changed or invented): {keys}")
+            if snippets["reflowed"]:
+                keys = [s["key"] or "?" for s in snippets["reflowed_items"]]
+                flags.append(f"{snippets['reflowed']} snippet(s) reflowed (whitespace in prose only): {keys}")
     denied = [b for b in bash_calls.values() if b["denied"]]
     if denied:
         flags.append(f"{len(denied)} Bash call(s) denied by the allowlist (e.g. {denied[0]['command'][:60]!r})")
@@ -309,7 +363,9 @@ def build_table(root: Path):
             "docs_read": m.get("docs_read", len(m["fetches"].get("unique_urls", []))),
             "script_net": m.get("script", {}).get("network"),
             "script_cached": m.get("script", {}).get("cache_hits"),
-            "snip_ok": m.get("snippets", {}).get("verbatim"),
+            # `verbatim` is the name the first version of this metric used.
+            "snip_exact": m.get("snippets", {}).get("exact", m.get("snippets", {}).get("verbatim")),
+            "snip_reflowed": m.get("snippets", {}).get("reflowed"),
             "snip_total": m.get("snippets", {}).get("total"),
             "php_errors": score.get("php_lint_errors"),
             "phpcs_errors": score.get("phpcs_errors"),
@@ -322,7 +378,7 @@ def build_table(root: Path):
         "",
         "Means across repeats. Time and cost come from Claude Code's own result event.",
         "",
-        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | Snippets verbatim | PHP lint errs | PHPCS errs | Judge % | Flags |",
+        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | Snippets exact/reflowed/total | PHP lint errs | PHPCS errs | Judge % | Flags |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for (prompt, arm), reps in sorted(rows.items()):
@@ -332,7 +388,7 @@ def build_table(root: Path):
             f"{fmt(avg['tokens'], ',.0f')} | {fmt(avg['fetch_main'], '.1f')}/{fmt(avg['fetch_sub'], '.1f')} | "
             f"{fmt(avg['lookups'], '.1f')} | {fmt(avg['docs_read'], '.1f')} | "
             f"{fmt(avg['script_net'], '.1f')}/{fmt(avg['script_cached'], '.1f')} | "
-            f"{fmt(avg['snip_ok'], '.1f')}/{fmt(avg['snip_total'], '.1f')} | {fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
+            f"{fmt(avg['snip_exact'], '.1f')}/{fmt(avg['snip_reflowed'], '.1f')}/{fmt(avg['snip_total'], '.1f')} |{fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
             f"{fmt(avg['judge_pct'], '.0f')} | {fmt(avg['flags'], '.0f')} |"
         )
 
