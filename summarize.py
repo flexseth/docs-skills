@@ -15,7 +15,22 @@ from pathlib import Path
 
 AGENT_TOOL_NAMES = {"Agent", "Task"}
 FETCH_TOOL_NAMES = {"WebFetch"}
-JSON_BLOCK = re.compile(r"```json\s*(.*?)```", re.S)
+
+
+def extract_json_block(text: str):
+    """Parse the JSON object that follows the first ```json marker, or None.
+
+    A closing-fence regex is not safe here: a snippet inside the JSON can itself
+    contain a ``` code fence, which would cut the JSON short. raw_decode reads
+    exactly one JSON value and ignores whatever comes after it."""
+    start = text.find("```json")
+    if start == -1:
+        return None
+    try:
+        value, _ = json.JSONDecoder().raw_decode(text[start + len("```json"):].lstrip())
+    except json.JSONDecodeError:
+        return None
+    return value
 
 # The docs-lookup helper script (agents/wp-docs.py). Its commands that fetch a
 # page count against the agent's per-call budget of about 8.
@@ -119,12 +134,7 @@ def summarize_run(run: Path) -> dict:
                 text = tool_result_text(block)
                 call = agent_calls[block["tool_use_id"]]
                 call["response_raw"] = text
-                match = JSON_BLOCK.search(text)
-                if match:
-                    try:
-                        call["response_json"] = json.loads(match.group(1))
-                    except json.JSONDecodeError:
-                        pass
+                call["response_json"] = extract_json_block(text)
 
     usage = result.get("usage", {})
     model_usage = result.get("modelUsage", {})
