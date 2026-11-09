@@ -17,6 +17,31 @@ AGENT_TOOL_NAMES = {"Agent", "Task"}
 FETCH_TOOL_NAMES = {"WebFetch"}
 JSON_BLOCK = re.compile(r"```json\s*(.*?)```", re.S)
 
+# The docs-lookup helper script (agents/wp-docs.py). Its commands that fetch a
+# page count against the agent's per-call budget of about 8.
+SCRIPT_CALL = re.compile(r"wp-docs\.py\s+(\w+)")
+PAGE_COMMANDS = {"headings", "section", "links", "sitemap"}
+MAX_PAGE_LOOKUPS_PER_CALL = 8
+# Index lookups (manifest, sitemaps) are not docs the model read.
+INDEX_URL = re.compile(r"manifest\.json$|sitemap[^/]*\.xml$")
+
+
+def clean_doc_url(url: str) -> str:
+    """Drop the ?output_format=md parameter so URLs compare equal."""
+    return re.sub(r"[?&]output_format=md", "", url)
+
+
+def read_script_log(path: Path) -> list:
+    """Lookups logged by the helper script, one JSON object per line."""
+    entries = []
+    if path.exists():
+        for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    return entries
+
 
 def read_events(path: Path):
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -46,6 +71,7 @@ def summarize_run(run: Path) -> dict:
     result = {}
     fetches = []          # {url, by: "main" | "subagent"}
     agent_calls = {}      # tool_use_id -> call info
+    bash_calls = {}       # tool_use_id -> {command, by, parent, script_command, denied}
 
     for event in read_events(stream):
         kind = event.get("type")
@@ -61,6 +87,16 @@ def summarize_run(run: Path) -> dict:
                 name, args = block.get("name"), block.get("input", {})
                 if name in FETCH_TOOL_NAMES:
                     fetches.append({"url": args.get("url", ""), "by": "subagent" if parent else "main"})
+                elif name == "Bash":
+                    command = args.get("command", "")
+                    match = SCRIPT_CALL.search(command)
+                    bash_calls[block.get("id")] = {
+                        "command": command,
+                        "by": "subagent" if parent else "main",
+                        "parent": parent,  # the Agent call this ran inside, if any
+                        "script_command": match.group(1) if match else None,
+                        "denied": False,
+                    }
                 elif name in AGENT_TOOL_NAMES:
                     agent_calls[block.get("id")] = {
                         "subagent_type": args.get("subagent_type", ""),
@@ -75,6 +111,9 @@ def summarize_run(run: Path) -> dict:
             if not isinstance(content, list):
                 continue
             for block in content:
+                if block.get("type") == "tool_result" and block.get("tool_use_id") in bash_calls:
+                    # A script call that exits 1 is a normal failed lookup, not a denial.
+                    bash_calls[block["tool_use_id"]]["denied"] = bool(block.get("is_error")) and "denied" in tool_result_text(block).lower()
                 if block.get("type") != "tool_result" or block.get("tool_use_id") not in agent_calls:
                     continue
                 text = tool_result_text(block)
@@ -103,6 +142,38 @@ def summarize_run(run: Path) -> dict:
     other_agents = [c["subagent_type"] for c in agent_calls.values() if c["subagent_type"] != "docs-lookup"]
     if other_agents:
         flags.append(f"other sub-agents used: {sorted(set(other_agents))}")
+
+    # Helper script (agents/wp-docs.py): calls, lookups and rule breaks.
+    script_calls = [b for b in bash_calls.values() if b["script_command"]]
+    other_bash = [b for b in bash_calls.values() if not b["script_command"]]
+    log_entries = read_script_log(run / "wp-docs.log")
+    log_urls = [clean_doc_url(e.get("url", "")) for e in log_entries]
+    script_pages = sorted({u for u in log_urls if u and not INDEX_URL.search(u)})
+
+    page_lookups_per_call = {}   # docs-lookup Agent call id -> page-fetching script calls
+    for b in script_calls:
+        if b["parent"] and b["script_command"] in PAGE_COMMANDS:
+            page_lookups_per_call[b["parent"]] = page_lookups_per_call.get(b["parent"], 0) + 1
+    for call_id, call in agent_calls.items():
+        call["script_page_lookups"] = page_lookups_per_call.get(call_id, 0)
+
+    if arm == "agent":
+        if any(b["by"] == "main" for b in script_calls):
+            flags.append("main session ran the helper script directly (skipping the sub-agent)")
+        if script_calls and not log_entries:
+            flags.append("helper script ran but wp-docs.log is empty or missing (WP_DOCS_LOG did not reach it?)")
+        over = {i: n for i, n in page_lookups_per_call.items() if n > MAX_PAGE_LOOKUPS_PER_CALL}
+        if over:
+            flags.append(f"docs-lookup exceeded {MAX_PAGE_LOOKUPS_PER_CALL} page lookups in one call: {sorted(over.values())}")
+    denied = [b for b in bash_calls.values() if b["denied"]]
+    if denied:
+        flags.append(f"{len(denied)} Bash call(s) denied by the allowlist (e.g. {denied[0]['command'][:60]!r})")
+    if arm == "agent":
+        allowed_other = [b for b in other_bash if not b["denied"]]
+        if allowed_other:
+            flags.append(f"{len(allowed_other)} Bash call(s) other than wp-docs.py ran (e.g. {allowed_other[0]['command'][:60]!r})")
+    elif bash_calls:
+        flags.append(f"Bash used in the {arm} arm, which has no Bash")
     if (run / "stray_files.txt").exists() and (run / "stray_files.txt").read_text().strip():
         flags.append("files written outside ./output (see stray_files.txt)")
     if not (run / "output").exists():
@@ -146,6 +217,22 @@ def summarize_run(run: Path) -> dict:
             "docs_lookup": len(docs_calls),
             "other": len(other_agents),
         },
+        # Helper script lookups, from wp-docs.log. A cache hit is a lookup that
+        # made no network call; with the per-run cache dir these should be rare.
+        "script": {
+            "calls": len(script_calls),
+            "calls_main": sum(b["by"] == "main" for b in script_calls),
+            "calls_subagent": sum(b["by"] == "subagent" for b in script_calls),
+            "by_command": {c: sum(b["script_command"] == c for b in script_calls) for c in sorted({b["script_command"] for b in script_calls})},
+            "lookups": len(log_entries),
+            "network": sum(not e.get("cached") for e in log_entries),
+            "cache_hits": sum(bool(e.get("cached")) for e in log_entries),
+            "failed": sum(e.get("status") != 200 for e in log_entries),
+            "page_urls": script_pages,
+        },
+        # Distinct docs pages read by any route (WebFetch or the script),
+        # excluding the manifest and sitemaps. This is the finding 11 measure.
+        "docs_read": len({clean_doc_url(f["url"]) for f in fetches if f["url"]} | set(script_pages)),
         "flags": flags,
     }
     metrics["tokens"]["total"] = sum(metrics["tokens"].values())
@@ -182,6 +269,10 @@ def build_table(root: Path):
             "fetch_main": m["fetches"]["main"],
             "fetch_sub": m["fetches"]["subagent"],
             "lookups": m["agent_calls"]["docs_lookup"],
+            # v1 results have no `script` or `docs_read`; fall back to WebFetch URLs.
+            "docs_read": m.get("docs_read", len(m["fetches"].get("unique_urls", []))),
+            "script_net": m.get("script", {}).get("network"),
+            "script_cached": m.get("script", {}).get("cache_hits"),
             "php_errors": score.get("php_lint_errors"),
             "phpcs_errors": score.get("phpcs_errors"),
             "judge_pct": (100 * judge["total"] / judge["max"]) if judge.get("max") else None,
@@ -193,15 +284,16 @@ def build_table(root: Path):
         "",
         "Means across repeats. Time and cost come from Claude Code's own result event.",
         "",
-        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | Fetches main/sub | Lookups | PHP lint errs | PHPCS errs | Judge % | Flags |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Prompt | Arm | Reps | Time (s) | Cost ($) | Tokens | WebFetch main/sub | Lookups | Docs read | Script net/cached | PHP lint errs | PHPCS errs | Judge % | Flags |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for (prompt, arm), reps in sorted(rows.items()):
         avg = {k: mean([r[k] for r in reps]) for k in reps[0]}
         lines.append(
             f"| {prompt} | {arm} | {len(reps)} | {fmt(avg['secs'], '.0f')} | {fmt(avg['cost'], '.2f')} | "
             f"{fmt(avg['tokens'], ',.0f')} | {fmt(avg['fetch_main'], '.1f')}/{fmt(avg['fetch_sub'], '.1f')} | "
-            f"{fmt(avg['lookups'], '.1f')} | {fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
+            f"{fmt(avg['lookups'], '.1f')} | {fmt(avg['docs_read'], '.1f')} | "
+            f"{fmt(avg['script_net'], '.1f')}/{fmt(avg['script_cached'], '.1f')} | {fmt(avg['php_errors'], '.1f')} | {fmt(avg['phpcs_errors'], '.0f')} | "
             f"{fmt(avg['judge_pct'], '.0f')} | {fmt(avg['flags'], '.0f')} |"
         )
 
@@ -227,6 +319,6 @@ if __name__ == "__main__":
         build_table(Path(sys.argv[2]))
     elif len(sys.argv) == 2:
         m = summarize_run(Path(sys.argv[1]))
-        print(json.dumps({k: m[k] for k in ("duration_ms", "total_cost_usd", "models", "fetches", "agent_calls", "flags")}, indent=2))
+        print(json.dumps({k: m[k] for k in ("duration_ms", "total_cost_usd", "models", "fetches", "agent_calls", "script", "docs_read", "flags")}, indent=2))
     else:
         sys.exit(__doc__)
