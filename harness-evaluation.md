@@ -54,7 +54,7 @@ REPS=3 ARMS="agent bare sonnet" ./run_all.sh
 
 Optional scoring extras:
 
-- `SCORE_BUILD=1` runs `npm install` + `npm run build` per plugin (slow).
+- `SCORE_BUILD=1` runs `npm install` + `npm run build` per plugin, in a throwaway copy so `results/` never gains a `node_modules`, and with install scripts skipped (`--ignore-scripts`) because `package.json` was written by a model. It records which step failed, the seconds taken and how many files the build produced. Expect about 80 seconds per plugin (all 14 v1 plugins: 18 minutes, all built), so `SCORE_BUILD=1 ./run_all.sh` adds roughly that to scoring.
 - `WP_PATH=/path/to/wordpress` runs Plugin Check (needs `wp` and the plugin-check plugin active).
 - PHPCS runs only if the WordPress standard is installed: `composer global require wp-coding-standards/wpcs`.
 

@@ -17,6 +17,8 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
+import time
 from pathlib import Path
 
 PHPCS_CANDIDATES = ["phpcs", str(Path.home() / ".composer/vendor/bin/phpcs")]
@@ -35,6 +37,27 @@ def find_phpcs():
             if "WordPress" in standards:
                 return path
     return None
+
+
+def build_plugin(plugin: Path) -> dict:
+    """npm install + build in a throwaway copy, so results/ never gains a node_modules.
+
+    Install scripts are skipped (--ignore-scripts): package.json was written by a model, so
+    nothing it or its dependencies declare should run on this machine at install time."""
+    started, step, out = time.time(), "install", ""
+    with tempfile.TemporaryDirectory(prefix="wp-build.") as tmp:
+        work = Path(tmp) / plugin.name
+        shutil.copytree(plugin, work, ignore=shutil.ignore_patterns("node_modules", "build"))
+        try:
+            code, out = run(["npm", "install", "--no-audit", "--no-fund", "--ignore-scripts"], cwd=work, timeout=900)
+            if code == 0:
+                step = "build"
+                code, out = run(["npm", "run", "build"], cwd=work, timeout=900)
+        except subprocess.TimeoutExpired:
+            code, out = 1, f"timed out during npm {step}"
+        built = sum(1 for f in (work / "build").rglob("*") if f.is_file()) if (work / "build").is_dir() else 0
+    return {"ok": code == 0, "failed_step": None if code == 0 else step, "seconds": round(time.time() - started),
+            "build_files": built, "log_tail": out[-2000:]}
 
 
 def plugin_dirs(output: Path):
@@ -80,10 +103,7 @@ def main(run_dir: Path):
         results = {}
         for plugin in plugin_dirs(output):
             if (plugin / "package.json").exists():
-                code, out = run(["npm", "install", "--no-audit", "--no-fund"], cwd=plugin, timeout=900)
-                if code == 0:
-                    code, out = run(["npm", "run", "build"], cwd=plugin, timeout=900)
-                results[plugin.name] = {"ok": code == 0, "log_tail": out[-2000:]}
+                results[plugin.name] = build_plugin(plugin)
         score["build_ok"] = all(r["ok"] for r in results.values()) if results else None
         score["details"]["build"] = results
     else:
