@@ -5,7 +5,7 @@
 #   ./run.sh <prompt> <arm> [rep]
 #
 #   prompt  01..07 (file in prompts/)
-#   arm     agent   Opus + docs-lookup sub-agent + WebFetch
+#   arm     agent   Opus + docs-lookup sub-agent (Sonnet + agents/wp-docs.py) + WebFetch
 #           bare    Opus + WebFetch, no sub-agents
 #           sonnet  Sonnet + WebFetch, no sub-agents
 #   rep     repeat number (default 1)
@@ -27,6 +27,7 @@ PROMPT_FILE="$HERE/prompts/$PROMPT_ID.md"
 [[ -f "$PROMPT_FILE" ]] || { echo "No prompt: $PROMPT_FILE" >&2; exit 1; }
 
 # Tools every arm gets. No Bash: runs write source only (see preamble).
+# The one exception is the agent arm, which may run the docs-lookup helper script.
 TOOLS=( Read Write Edit Glob Grep WebFetch WebSearch )
 ARM_ARGS=()
 
@@ -39,6 +40,10 @@ case "$ARM" in
 		ARM_ARGS+=( --disallowedTools "Agent(web-fetch)" "Agent(general-purpose)" "Agent(claude)"
 			"Agent(Explore)" "Agent(Plan)" "Agent(statusline-setup)" )
 		TOOLS+=( Agent )
+		# docs-lookup (frontmatter `tools: Bash`) may run the helper script and
+		# nothing else. The allowlist is shared with Opus, so Opus could call the
+		# script directly too; summarize.py is meant to flag that.
+		TOOLS+=( "Bash(python3 $HERE/agents/wp-docs.py *)" )
 		;;
 	bare)
 		MODEL=opus
@@ -67,6 +72,14 @@ cat "$HERE/prompts/_preamble.md" "$PROMPT_FILE" > "$OUT/prompt.md"
 
 WORK="$( mktemp -d "${TMPDIR:-/tmp}/wp-eval.XXXXXX" )"
 trap 'rm -rf "$WORK"' EXIT
+
+# Helper script settings (agent arm). Every run gets its own cache directory,
+# so no run reuses another run's pages: each run starts completely dry. The
+# log stays with the results, one JSON line per lookup.
+if [[ "$ARM" == agent ]]; then
+	export WP_DOCS_CACHE_DIR="$WORK/wp-docs-cache"
+	export WP_DOCS_LOG="$OUT/wp-docs.log"
+fi
 
 now_ms() { python3 -c 'import time; print(int(time.time() * 1000))'; }
 
