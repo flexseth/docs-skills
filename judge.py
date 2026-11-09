@@ -5,8 +5,8 @@ Writes <run-dir>/judge.json.
     judge.py <run-dir>
 
 The judge sees the original prompt, the rubric and the generated files.
-It never sees which arm produced them. It runs with no tools, in an empty
-temp dir, so it scores from the files alone.
+It never sees which arm produced them. It runs with no built-in tools
+(--tools ""), in an empty temp dir, so it scores from the files alone.
 """
 import json
 import subprocess
@@ -82,9 +82,11 @@ def main(run_dir: Path):
 
     with tempfile.TemporaryDirectory(prefix="wp-judge.") as empty:
         proc = subprocess.run(
+            # --tools "" removes every built-in tool, so the judge cannot read
+            # results/ (or anything else) even if a permission rule ever allowed it.
             ["claude", "-p", "--model", "opus", "--output-format", "json",
              "--json-schema", json.dumps(SCHEMA), "--permission-mode", "dontAsk",
-             "--strict-mcp-config", "--no-session-persistence"],
+             "--tools", "", "--strict-mcp-config", "--no-session-persistence"],
             input=judge_prompt, capture_output=True, text=True, cwd=empty, timeout=900,
         )
 
