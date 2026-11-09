@@ -24,6 +24,8 @@ Rules enforced here, not left to the caller:
     - Every lookup is appended to $WP_DOCS_LOG (JSON lines), if set, with
       "cached": true when it came from the cache.
 
+Run ./test_wp_docs.sh (needs network) to check the cache in both modes.
+
 Standard library only. Exit code 0 on success, 1 on any failure (the error is
 printed as JSON on stdout so the caller can record it).
 """
