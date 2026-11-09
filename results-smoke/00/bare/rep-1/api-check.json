@@ -1,0 +1,70 @@
+{
+  "plugins": {
+    "note-box": {
+      "js": [
+        {
+          "package": "@wordpress/block-editor",
+          "name": "InspectorControls",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/",
+          "note": ""
+        },
+        {
+          "package": "@wordpress/block-editor",
+          "name": "useBlockProps",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/",
+          "note": ""
+        },
+        {
+          "package": "@wordpress/blocks",
+          "name": "registerBlockType",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-blocks/",
+          "note": ""
+        },
+        {
+          "package": "@wordpress/components",
+          "name": "PanelBody",
+          "status": "ok",
+          "url": "",
+          "note": "exported; no page of its own"
+        },
+        {
+          "package": "@wordpress/components",
+          "name": "TextareaControl",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/block-editor/reference-guides/components/textarea-control/",
+          "note": ""
+        },
+        {
+          "package": "@wordpress/i18n",
+          "name": "__",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/",
+          "note": ""
+        }
+      ],
+      "php": [
+        {
+          "name": "add_action",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/reference/functions/add_action/",
+          "note": ""
+        },
+        {
+          "name": "register_block_type",
+          "status": "ok",
+          "url": "https://developer.wordpress.org/reference/functions/register_block_type/",
+          "note": ""
+        }
+      ],
+      "summary": {
+        "ok": 8
+      }
+    }
+  },
+  "summary": {
+    "ok": 8
+  }
+}

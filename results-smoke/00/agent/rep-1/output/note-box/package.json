@@ -1,0 +1,22 @@
+{
+	"name": "note-box",
+	"version": "0.1.0",
+	"description": "A simple static block that displays a note.",
+	"license": "GPL-2.0-or-later",
+	"main": "build/note/index.js",
+	"files": [
+		"build",
+		"note-box.php"
+	],
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

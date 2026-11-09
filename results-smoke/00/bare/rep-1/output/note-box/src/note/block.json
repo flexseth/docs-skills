@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "note-box/note",
+	"version": "0.1.0",
+	"title": "Note Box",
+	"category": "text",
+	"icon": "testimonial",
+	"description": "Displays a note entered in the block settings sidebar.",
+	"textdomain": "note-box",
+	"attributes": {
+		"note": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js"
+}

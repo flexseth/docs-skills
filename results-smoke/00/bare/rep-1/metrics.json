@@ -1,0 +1,90 @@
+{
+  "prompt": "00",
+  "arm": "bare",
+  "rep": "rep-1",
+  "duration_ms": 40544,
+  "duration_api_ms": 38910,
+  "wall_ms": 41549,
+  "num_turns": 10,
+  "total_cost_usd": 0.2040401,
+  "tokens": {
+    "input": 4963,
+    "output": 5176,
+    "cache_read": 86375,
+    "cache_creation": 14228,
+    "total": 110742
+  },
+  "main_session_tokens": 104195,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 12,
+      "outputTokens": 3580,
+      "cacheReadInputTokens": 86375,
+      "cacheCreationInputTokens": 14228,
+      "webSearchRequests": 0,
+      "costUSD": 0.202747,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 478,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 14228,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 4951,
+      "outputTokens": 1596,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0012931000000000002,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 825,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 2,
+    "main": 2,
+    "subagent": 0,
+    "unique_urls": [
+      "https://developer.wordpress.org/block-editor/reference-guides/components/textarea-control/",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/components/src/textarea-control/README.md"
+    ]
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "script": {
+    "calls": 0,
+    "calls_main": 0,
+    "calls_subagent": 0,
+    "by_command": {},
+    "lookups": 0,
+    "network": 0,
+    "cache_hits": 0,
+    "failed": 0,
+    "page_urls": []
+  },
+  "snippets": {
+    "total": 0,
+    "exact": 0,
+    "reflowed": 0,
+    "altered": 0,
+    "reflowed_items": [],
+    "altered_items": []
+  },
+  "docs_read": 2,
+  "flags": []
+}

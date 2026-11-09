@@ -1,0 +1,45 @@
+{
+  "php_lint_errors": 0,
+  "phpcs_errors": 0,
+  "phpcs_warnings": 0,
+  "build_ok": true,
+  "plugin_check_errors": 1,
+  "plugin_check_warnings": 0,
+  "skipped": {},
+  "details": {
+    "php_lint": [],
+    "build": {
+      "note-box": {
+        "ok": true,
+        "failed_step": null,
+        "seconds": 99,
+        "build_files": 3,
+        "log_tail": "\n> note-box@0.1.0 build\n> wp-scripts build\n\nasset note/index.js 803 bytes [emitted] [minimized] (name: note/index)\nasset note/block.json 490 bytes [emitted] [from: src/note/block.json] [copied]\nasset note/index.asset.php 180 bytes [emitted] (name: note/index)\nEntrypoint note/index 983 bytes = note/index.js 803 bytes note/index.asset.php 180 bytes\norphan modules 2.35 KiB [orphan] 8 modules\n./src/note/index.js + 8 modules 2.62 KiB [not cacheable] [built] [code generated]\nwebpack 5.112.2 compiled successfully in 917 ms\n"
+      }
+    },
+    "plugin_check": {
+      "note-box": {
+        "errors": 1,
+        "warnings": 0,
+        "by_code": {
+          "ERROR no_plugin_readme": 1
+        },
+        "issues": [
+          {
+            "file": "readme.txt",
+            "line": 0,
+            "type": "ERROR",
+            "code": "no_plugin_readme",
+            "message": "The plugin readme.txt does not exist."
+          }
+        ]
+      }
+    },
+    "api_deprecated": []
+  },
+  "api_deprecated": 0,
+  "api_experimental": 0,
+  "api_not_found": 0,
+  "api_unverified": 0,
+  "api_unchecked": 0
+}
