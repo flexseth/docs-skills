@@ -200,7 +200,8 @@ def cmd_headings(url):
 
 
 def cmd_section(url, selector):
-    """Print one section as JSON: from its heading to the next of equal or higher level."""
+    """Print one section as JSON: the lines under a heading, up to the next heading
+    of equal or higher level. `text` excludes the heading line; see `heading`."""
     text = fetch(url)
     lines = text.splitlines()
     headings = parse_headings(lines)
@@ -222,7 +223,10 @@ def cmd_section(url, selector):
         if number > start and other_level <= level:
             end = number - 1
             break
-    body = lines[start - 1:end]
+    # The heading line itself is left out of `text`: in the raw Markdown it carries
+    # invisible characters and a link with ?output_format=md. The cleaned heading
+    # is in `heading`. Every other line is returned exactly as it appears.
+    body = lines[start:end]
     truncated = len(body) > MAX_SECTION_LINES
     if truncated:
         body = body[:MAX_SECTION_LINES]
@@ -232,9 +236,9 @@ def cmd_section(url, selector):
         "last_modified": last_modified(text),
         "fetched": date.today().isoformat(),
         "heading": title,
-        "lines": [start, start + len(body) - 1],
+        "lines": [start, start + len(body)],
         "truncated": truncated,
-        "text": "\n".join(body),
+        "text": "\n".join(body).strip("\n"),
     }, indent=2, ensure_ascii=False))
 
 

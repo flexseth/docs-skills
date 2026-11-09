@@ -51,7 +51,7 @@ Steps 3 to 5 are mechanical, so they live in a script, not in the agent's instru
 | `resolve <word> ...` | Searches the manifest and builds handbook URLs from the slug chain |
 | `reference <function\|hook\|class> <name>` | Builds a reference URL (fixed pattern, no fetch) |
 | `headings <url>` | Lists headings with line numbers; ignores headings inside code fences |
-| `section <url> <heading or line>` | Returns one section as JSON (`text`, `url`, `last_modified`, `fetched`, `heading`, `lines`, `truncated`); caps at 120 lines |
+| `section <url> <heading or line>` | Returns one section as JSON (`text`, `url`, `last_modified`, `fetched`, `heading`, `lines`, `truncated`); caps at 120 lines. `text` leaves out the heading line, whose raw Markdown carries invisible characters and a `?output_format=md` link; the cleaned heading is in `heading`. All other lines are returned exactly as they appear. |
 | `links <url>` | Lists child pages, for the 404 fallback |
 | `sitemap <word> ...` | Searches the sitemaps. Slow (up to 15 fetches); last resort |
 
