@@ -157,27 +157,39 @@ def words_pattern(words):
 
 
 def cmd_resolve(words):
-    """Find handbook pages whose title or slug contains every word."""
+    """Find handbook pages where every word matches the page's title or slug, or a parent's."""
     manifest = json.loads(fetch(MANIFEST_URL))
     by_slug = {entry["slug"]: entry for entry in manifest}
     patterns = words_pattern(words)
 
+    def ancestors(entry):
+        """Parent entries, nearest first."""
+        found = []
+        while entry["parent"] and entry["parent"] in by_slug:
+            entry = by_slug[entry["parent"]]
+            found.append(entry)
+        return found
+
     def url_for(entry):
-        chain = []
-        while entry:
-            chain.append(entry["slug"])
-            entry = by_slug.get(entry["parent"]) if entry["parent"] else None
+        chain = [entry["slug"]] + [a["slug"] for a in ancestors(entry)]
         return HANDBOOK_BASE + "/".join(reversed(chain)) + "/"
 
+    def text_of(entry):
+        return entry["title"].replace("-", " ") + " " + entry["slug"].replace("-", " ")
+
+    # A word may match the page itself or any parent: a caller asking for
+    # "interactivity api directives store" names the section ("Interactivity
+    # API") that the page "Directives and Store" lives under. Pages that match
+    # more words themselves rank first.
     matches = []
     for entry in manifest:
-        title = entry["title"].replace("-", " ")
-        haystack = title + " " + entry["slug"].replace("-", " ")
-        if all(p.search(haystack) for p in patterns):
-            in_title = all(p.search(title) for p in patterns)
-            matches.append((not in_title, entry["title"], url_for(entry)))
+        own = text_of(entry)
+        parents = " ".join(text_of(a) for a in ancestors(entry))
+        if all(p.search(own) or p.search(parents) for p in patterns):
+            own_hits = sum(bool(p.search(own)) for p in patterns)
+            matches.append((-own_hits, len(ancestors(entry)), entry["title"], url_for(entry)))
     matches.sort()
-    print(json.dumps([{"title": t, "url": u} for _, t, u in matches[:10]], indent=2))
+    print(json.dumps([{"title": t, "url": u} for _, _, t, u in matches[:10]], indent=2))
     if not matches:
         sys.exit(1)
 
