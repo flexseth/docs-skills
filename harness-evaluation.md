@@ -36,8 +36,9 @@ Time, tokens, cost and per-model usage come from Claude Code's own `stream-json`
 | `run.sh` | One run: `./run.sh <prompt> <arm> [rep]` |
 | `run_all.sh` | Every prompt × arm × repeat, then scoring and the summary |
 | `summarize.py` | Parses a run's `stream.jsonl` into `metrics.json`; `--table` builds `results/summary.md` |
-| `score.py` | Automated checks: `php -l`, PHPCS (WordPress), optional build and Plugin Check |
-| `judge.py` | Blind rubric scoring by a separate Claude call |
+| `score.py` | Automated checks: `php -l`, PHPCS (WordPress), optional build and Plugin Check, and the API check below |
+| `judge.py` | Blind rubric scoring by a separate Claude call with no tools. It is given the API check as context, holds the rubric's "no invented or deprecated APIs" criterion to its own rule, and takes the max from the rubric |
+| `judge_docs.py` | Checks every `@wordpress/*` import and WordPress PHP function in a generated plugin against current developer.wordpress.org docs: deprecated, experimental, not found. No model; the result is the same for both arms |
 
 ## Running it
 
