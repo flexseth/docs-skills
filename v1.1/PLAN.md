@@ -58,6 +58,13 @@ Rather than the agent deciding what is basic, make the script cheap and decisive
 - Keep `resolve`, `reference`, `headings`, `section`, `links`, `sitemap` as the low-level steps for the unusual cases.
 - Reuse the existing `fence_step()`, the section cutter, the cache and the host allowlist in `agents/wp-docs.py`.
 
+### 3a. Letting the caller tell whether what it "knows" has changed
+The removed "do not use it for basics" rule let Opus skip delegation whenever it believed it already knew the API, with no way to notice when that knowledge had gone stale (a since/deprecated bump, a renamed prop, a changed signature). The fix is to make a cheap drift check the default, so the caller is told what the live docs say and can compare it to memory instead of trusting memory blindly:
+- The `find` result already carries `last_modified` (the page's "Last modified" date) and the `Deprecated/Changelog` heading. Treat these as the drift signal. Name them in the spec as the fields the caller checks against its own assumption before writing code.
+- Add a cheap default path: `find` returns the signature/return/since/deprecated lines (the decision sections) in one call, so confirming "what Opus knows" is a single lookup, not a reason to skip the agent. A well-known function and a fast-changing one cost the same one call.
+- Give `find` a `--brief` mode that returns only the signature line, the `since`/`deprecated` note and `last_modified`, no example, for the cheapest possible "has this changed since I last knew it" check.
+- Spec rule to add: the caller does not answer WordPress/Gutenberg API questions from memory; it runs `find` (brief is enough) and reconciles its assumption with `last_modified`, `since`/`deprecated` and the signature. If they disagree, the live docs win and `matches_request`/`note` record the drift.
+
 ### 4. Wiring (the main risk)
 - **Caller instruction that names the agent.** The Agent tool only spawns a sub-agent when the user asks or names the agent type, so the skill ships a short rule that names `docs-lookup`: use it for every WordPress/Gutenberg API lookup before writing code, batch resources in one call, do not fetch developer.wordpress.org directly. It goes in `SKILL.md` and as a snippet to append to `CLAUDE.md`. (From the v2 pilot: Opus delegated 1 of 5 times without it. How well this works is untested.)
 - **Agent description:** open with a directive ("Use for every WordPress or Gutenberg documentation lookup"), drop the "basics" line.
@@ -84,6 +91,7 @@ The exact folder name and layout is checked against `docs/authoring-guide.md` an
 ## Verification
 - Free: `agents/test_wp_docs.sh` (cache, allowlist) still passes on the new branch.
 - Free: a fixed list of about 15 lookups run through `wp-docs.py find`, mixing well-known basics (`register_post_type`, `$wpdb->prepare`, `wp_enqueue_script`) and fast-changing items (`TextareaControl`, `block.json` `viewScriptModule`, Interactivity `wp_interactivity_state`, a deprecated component). Pass means each returns the right URL and the decision sections in one call, and a made-up name returns not-found with what was tried.
+- Free: `find --brief` on the same list returns `last_modified`, the signature line and any `since`/`deprecated` note, and the deprecated component surfaces its deprecation. This is the drift check that replaces the removed "basics" rule.
 - Free: check the installed-path wiring by copying the skill folder elsewhere and running the documented command from another directory.
 - One cheap live check: a session told "use docs-lookup" returns the JSON object only, with each `snippet` identical to the page's Markdown. No eval runs.
 
