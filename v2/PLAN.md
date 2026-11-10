@@ -198,3 +198,47 @@ Run `python3 summarize.py --table results` and read the flags. Stop and investig
 - `results/` with the raw runs, and `results/summary.md`.
 - `v2/FINDINGS.md`, written after the runs.
 - Updates on issues #2 and #3.
+
+## 12. Delegation remedy (added 2026-11-10, not yet implemented)
+
+### Context
+In the pilot Opus delegated to `docs-lookup` in 1 of 5 prompts (05). In 01-04 it made no lookup of any kind. It never used Bash to bypass the agent: its 3 Bash calls were mkdir/cd file setup, all denied, and every `wp-docs.py` call came from the sub-agent. Bash is not the cause.
+
+Root causes, in order of weight:
+1. Opus judges it does not need docs and writes from memory.
+2. The Agent tool's built-in description says: do not spawn agents unless the user asks or **names an available agent type**.
+3. The agent's own description says "Do not use it for basics you already know well", which licenses skipping.
+
+An agent description cannot override (2). The lever is an instruction, from the user or operator layer, that **names `docs-lookup`** and makes lookup a required step, not an option.
+
+### Approach (strongest first)
+**A. Instruction that names the agent** (the real fix; delivered by whatever the user installs)
+- Real use: the skill ships a short rule block that goes in `CLAUDE.md` (or the skill body). Skills load on demand, so a skill description alone is weak; the rule belongs in always-loaded context. Install step: append the block to `CLAUDE.md`.
+- Eval: the same text via `--append-system-prompt-file` (agent arm only), so prompts stay identical across arms. The bare arm gets the same text with "fetch it yourself with WebFetch" instead.
+- Wording is a procedure, not a suggestion. It names the agent, sets a trigger (any `@wordpress/*` import, block.json field, hook, REST/Interactivity API, or deprecation question) and a required step before writing code ("ask docs-lookup for current signature, props, deprecation status; do not rely on memory for these"). It also says to batch resources in one call and not to fetch developer.wordpress.org itself.
+
+**B. Make the agent description pull, not push away**
+- Delete "Do not use it for basics you already know well".
+- Open with a directive: "Use this agent for every WordPress or Gutenberg documentation lookup." Keep the "describe each resource in plain language" line.
+
+**C. Remove the shortcuts (eval agent arm only, second variant)**
+- Deny WebFetch and WebSearch to Opus so the only route to docs is the agent. Opus can still write from memory, so C works only together with A.
+
+**Bash.** Keep Bash in `--tools` (the sub-agent will not start without it). Add a `--via-agent` guard in `agents/wp-docs.py`, passed by the agent file, so a direct call by Opus is refused. `summarize.py` already flags direct script calls; use that to confirm.
+
+### Eval changes
+- `prompts/_system-agent.md`, `prompts/_system-bare.md`: the two instruction texts (variant "route + verify").
+- `run.sh`: `--append-system-prompt-file` per arm; trimmed `--tools` (agent arm `Write,Edit,WebFetch,Agent,Read,Bash`; bare arm `Write,Edit,WebFetch,Read`). This makes v2 figures non-comparable with the 10 full-tool baseline runs.
+- `agents/docs-lookup.md`: description edit (B).
+- `agents/wp-docs.py`: `--via-agent` guard.
+- Three measurement fixes: exclude `wp-docs-cache` from the stray-file check in `run.sh`; stop grading whitespace-only code changes as "altered" in `summarize.py`; scale the lookup cap with the number of parts in the agent file.
+- Update the estimates in this plan: pilot about $15-17 and 90 min; `REPS=3` about $45-50 and 4.5 h.
+
+### Verification (cheap before expensive)
+1. Free: confirm `--append-system-prompt-file` loads (check the init/system event) and the `--via-agent` guard refuses a direct call.
+2. One Haiku-priced probe of how an eval-style session would route a ToolsPanel prompt under the new instruction. Opus self-report is only a hint.
+3. The real test is the delegation count over prompts 01-07 (one rep, about $15-17). Stop rule: if Opus delegates in fewer than 3 of 7, move to variant C before `REPS=3`.
+4. Keep the 10 finished runs as the no-instruction baseline.
+
+### Open risk
+Whether an always-loaded instruction counts as "the user asked" under the Agent tool's rule is untested. Naming the agent type satisfies the rule's wording, but the pilot is the proof.
