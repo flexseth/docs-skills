@@ -4,11 +4,7 @@
 
 This guide serves as the Canonical URL builder for the `lookup` agent.
 
-When a calling agent invokes the `lookup` sub-agent, the primary focus is to search and find relevant documentation sections for the required resources.
-
-Because Opus and other models serve docs from memory, this can produce inaccurate or outdated findings. For example, rapidly changing APIs or new features may have new docs updated frequently, resulting in more context being avaiable to the model that is highly relevant. 
-
-The focus of the `lookup` agent is to check and make sure the docs are up-to-date, and provide more in-depth lookups to make sure that deprecations are being followed, all sources are provided, and accurate information is being returned to the main model. This process results in more precise, standards based, and future compliant code being written during the build.
+Canonical Documentation URL context is built from deep knowledge of docs researchers - not overly confident AI models - which provides a more accurate and streamlined approach to reviewing and returning contextual docs data. 
 
 ### WordPress Developer Resources (DevHub)
 
@@ -75,5 +71,11 @@ For each identified topic, determine which documentation source(s) apply:
 
 ## Code Reference 
 
-- functions, hooks, actions, filters
-- WP-CLI Commands
+### functions, hooks, actions, filters
+
+> To learn more about what filter and action hooks are, see [Plugin API](https://developer.wordpress.org/plugins/hooks/).
+> For a reference list of filter hooks, see Plugin API/[Filter Reference](https://developer.wordpress.org/apis/hooks/filter-reference/)
+- [Action Reference](https://developer.wordpress.org/apis/hooks/action-reference/)
+
+
+### WP-CLI Commands
