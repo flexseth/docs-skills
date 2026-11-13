@@ -1,0 +1,6 @@
+{
+  "claudeMdExcludes": [
+    "**/Developer/CLAUDE.md"
+  ],
+  "autoMemoryEnabled": false
+}
