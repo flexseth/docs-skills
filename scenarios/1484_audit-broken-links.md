@@ -2,6 +2,8 @@
 
 Issue reported by `@{{ISSUE_REPORTER}}`
 
+Opened {{ISSUE_CREATED_AT}}
+
 Lab 1484 is to audit links to see if they are broken or linking to relevant files, to see if the content has been updated. It relates to an issue on the Documentation Issue Tracker, where we try to fix broken documentation for WordPress.
 
 In this instance, we want the audit agent to review a documentation page broken links, The audit agent does not exist, so we are going to use this scenario to save knowledge as findings for agent and skill specification.
@@ -22,6 +24,9 @@ This lab has three steps:
 | `{{ISSUE_URL}}` | URL | Given in this scenario, under "Build Audit Inventory" | spec |
 | `{{ISSUE_BRIEF}}` | string | The quoted summary in the issue body | spec |
 | `{{ISSUE_REPORTER}}` | GitHub username | The issue's author (`author.login` from `gh issue view`), filled in at runtime | scenario, spec |
+| `{{ISSUE_CREATED_AT}}` | date (YYYY-MM-DD) | The issue's `createdAt` from `gh issue view`, filled in at runtime | scenario, spec, report |
+| `{{ISSUE_CLOSED_AT}}` | date (YYYY-MM-DD) | The issue's `closedAt` from `gh issue view`. Only when the issue is closed: then append ` · Closed {{ISSUE_CLOSED_AT}} · Round trip {{ISSUE_ROUND_TRIP}} days` to the "Opened" line. While the issue is open, leave both out. | scenario, report |
+| `{{ISSUE_ROUND_TRIP}}` | number of days | Days from `{{ISSUE_CREATED_AT}}` to `{{ISSUE_CLOSED_AT}}`. Only when the issue is closed. | scenario, report |
 | `{{SECTION_HEADING}}` | string | The "URL of the Page with the Issue" heading in the issue body; a marker only | not saved |
 | `{{CANONICAL_URL}}` | URL | The line after `{{SECTION_HEADING}}` | spec, report |
 | `{{LINKS}}` | list of URLs | Every link on `{{CANONICAL_URL}}` | report (inventory JSON) |
