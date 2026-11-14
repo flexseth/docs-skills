@@ -17,7 +17,7 @@ Populate scenario variables from the issue automatically, instead of entering th
 Use the GitHub CLI to pull issue data, for example:
 
 ```bash
-gh issue view <issue-number> --repo WordPress/Documentation-Issue-Tracker --json number,title,author,createdAt,closedAt,url,body
+gh issue view <issue-number> --repo WordPress/Documentation-Issue-Tracker --json number,title,author,state,createdAt,closedAt,url,body
 ```
 
 `gh` returns structured JSON directly, so it is quicker and less expensive than fetching and reading the issue's web page with WebFetch.
@@ -29,3 +29,21 @@ An all-purpose issue audit template, built from the general parts of the scenari
 ## Templates for Spec Kit
 
 Templates Spec Kit can build from, to include in the future. They will be used when scaffolding new agents and skills with Spec Kit and Claude.
+
+### Content pulled automatically from the GitHub issue
+
+Templates can fill these variables from the issue with `gh issue view` (see [Retrieve issue data with `gh`, not WebFetch](#retrieve-issue-data-with-gh-not-webfetch)):
+
+| Variable | From the issue |
+|---|---|
+| `{{ISSUE_NUMBER}}` | `number` |
+| `{{ISSUE_URL}}` | `url` |
+| `{{ISSUE_TITLE}}` | `title` |
+| `{{ISSUE_BRIEF_DESCRIPTION}}` | `title`, shortened to a kebab-case slug |
+| `{{ISSUE_REPORTER}}` | `author.login` |
+| `{{ISSUE_STATE}}` | `state` (`OPEN` or `CLOSED`) |
+| `{{ISSUE_CREATED_AT}}` | `createdAt` |
+| `{{ISSUE_CLOSED_AT}}` | `closedAt`, only when closed |
+| `{{ISSUE_ROUND_TRIP}}` | days from `createdAt` to `closedAt`, only when closed |
+| `{{ISSUE_BRIEF}}` | `body`, the quoted summary |
+| `{{CANONICAL_URL}}` | `body`, the line after the "URL of the Page with the Issue" heading |
