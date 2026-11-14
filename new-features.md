@@ -9,6 +9,7 @@ Populate scenario variables from the issue automatically, instead of entering th
 - **Issue number and brief description:** `{{ISSUE_NUMBER}}` from the issue number, `{{ISSUE_BRIEF_DESCRIPTION}}` from the issue title. These also give the lab branch and scenario file names.
 - **Issue reporter:** `{{ISSUE_REPORTER}}`, shown in the scenario as "Issue reported by `@{{ISSUE_REPORTER}}`".
 - **Issue date:** when the issue was opened. Once the issue is closed, check the close date back into the lab to show the round-trip time for the issue.
+- **Build the issue header with a script:** compute the "Opened" line from the issue's `state`, `createdAt`, and `closedAt`, adding the Closed and Round trip parts only when the issue is closed. This replaces the rule the model follows today, so the result no longer depends on the model.
 - **More fields later:** other issue details can be added as they become useful.
 
 ### Retrieve issue data with `gh`, not WebFetch
