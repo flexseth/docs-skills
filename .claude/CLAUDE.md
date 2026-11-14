@@ -47,6 +47,22 @@ Each scenario is developed on its own branch and worktree, created from `docs-au
 
 Scenarios come from the [Documentation Issue Tracker](https://github.com/WordPress/Documentation-Issue-Tracker).
 
+# Scenario Variables
+
+Scenarios contain variables: values you determine while running the lab (for example, a URL) and then save to the specification, the agent frontmatter, or the report, or use to build page URLs.
+
+- **Write variables as `{{UPPER_SNAKE_CASE}}`**, for example `{{CANONICAL_URL}}`. This is Anthropic's convention for prompt variables.
+- **Declare every variable** in a `## Variables` table near the top of the scenario:
+
+  | Variable | Type | How Claude finds it | Saved to |
+  |---|---|---|---|
+  | `{{CANONICAL_URL}}` | URL | Line after the "URL of the Page with the Issue" heading in the issue body | spec, report |
+
+- **Wrap content you produce in XML tags** with descriptive `snake_case` names, for example `<audit_summary_report>…</audit_summary_report>`.
+- **Do not use** `[ALL_CAPS]`, which Spec Kit's templates use for their own fill-in fields, or bare `<name>`, which Markdown hides when rendered.
+
+Source: Anthropic's [prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (variables in `{{DOUBLE_BRACES}}`, content and output in descriptive XML tags), read 2026-11-13.
+
 # Interfacing with Spec Kit
 
 Spec Kit "features" are folders, not Git branches. Spec Kit never calls Git, so it works the same in any worktree, and branch names are set by this project's standard, not by Spec Kit:
