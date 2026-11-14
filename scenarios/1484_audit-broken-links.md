@@ -28,18 +28,21 @@ This lab has three steps:
 | `{{DESTINATION_SUMMARY}}` | string | A summary of the page at `{{RESOLVED_URL}}` | report (inventory JSON) |
 | `{{AUDIT_REASON}}` | string, ≤ 2 sentences, ≤ 30 words | Written from this scenario | agent frontmatter |
 | `{{EVAL}}` | JavaScript | Written from this scenario | evals |
+| `{{AUDIT_FRONTMATTER_HOOKS}}` | Markdown | Drafted from this scenario: agent frontmatter, including `{{AUDIT_REASON}}` and the requests the agent should respond to | spec, for review |
+| `{{AUDIT_RESOLVE}}` | Markdown | Every `{{LINK}}` that does not resolve directly, with its status (redirected, not found, error) and `{{RESOLVED_URL}}` if any | report file |
+| `{{AUDIT_SUMMARY_REPORT}}` | Markdown table | Link counts per status and the confidence factor for `{{CANONICAL_URL}}` | report file, and shown in the terminal |
 
 ## Step 1 Deliverable - Agent Skill Spec
 
 **Frontmatter**
-- [ ] Draft `<audit-frontmatter-hooks>` for review
+- [ ] Draft `{{AUDIT_FRONTMATTER_HOOKS}}` for review
 
 {{AUDIT_REASON}}: (string) Frontmatter (written as prose, no more than two sentences, and summarized to at most and 30 words). Agent frontmatter should be no more than 150 words, so we are adhering to part of that standard with this scenario's summary.
 
 **Evals**
 {{EVAL}}: A JavaScript evaluation scenario to see if the audit works, given this scenario.
 
-**Findings**: Markdown files created as defined below. Reference files for skill tracing.
+**Findings**: `{{AUDIT_FRONTMATTER_HOOKS}}`, `{{AUDIT_RESOLVE}}`, and `{{AUDIT_SUMMARY_REPORT}}`, kept as reference for skill tracing.
 
 ## Step 2 Deliverable - Process Audit Given Issue Context
 
@@ -142,7 +145,7 @@ at this point, you should know the context of the doc audit, and which Canonical
 
 - Fetch the {{LINK}}, one by one from {{LINKS}}
 - **Resolves** For each page, does the page redirect (R) or 404 (404)?
-- **Forward** Any pages that do not resolve directly, add to `<audit-resolve>`
+- **Forward** Any pages that do not resolve directly, add to `{{AUDIT_RESOLVE}}`
 - For each page that does resolve, examine the first 50 lines of the page
 - Does the page content seem to match the referring link?
 - Display a confidence factor of overall accuracy on the canonical page
@@ -152,10 +155,10 @@ at this point, you should know the context of the doc audit, and which Canonical
 ## Summary of Audit Findings
 Format output as a table:
 
-- Fill in `<audit-summary-report>` 
-- Fill in `<audit-resolve>` 
+- Fill in `{{AUDIT_SUMMARY_REPORT}}` 
+- Fill in `{{AUDIT_RESOLVE}}` 
 
-Display a summary of the audit in the TUI, with links to the reports.
+Display `{{AUDIT_SUMMARY_REPORT}}` in the TUI, with links to the report files.
 
 ## Agent Planning Guide
 
