@@ -12,15 +12,19 @@ Populate scenario variables from the issue automatically, instead of entering th
 - **Build the issue header with a script:** compute the "Opened" line from the issue's `state`, `createdAt`, and `closedAt`, adding the Closed and Round trip parts only when the issue is closed. This replaces the rule the model follows today, so the result no longer depends on the model.
 - **More fields later:** other issue details can be added as they become useful.
 
-### Retrieve issue data with `gh`, not WebFetch
+### Retrieve issue data with `gh`, falling back to WebFetch
 
-Use the GitHub CLI to pull issue data, for example:
+Try the GitHub CLI first to pull issue data, for example:
 
 ```bash
 gh issue view <issue-number> --repo WordPress/Documentation-Issue-Tracker --json number,title,author,state,createdAt,closedAt,url,body
 ```
 
 `gh` returns structured JSON directly, so it is quicker and less expensive than fetching and reading the issue's web page with WebFetch.
+
+Many developers already use `gh`, so it is a good option for them. Other contributors may be using AI tools only, without `gh` installed. If `gh` is not available (not installed, or not signed in), use WebFetch on the issue URL instead.
+
+**To do:** add `gh` to the allowed tools, so issue lookups run without a permission prompt. Scope it to read-only issue commands, for example `Bash(gh issue view:*)` in `permissions.allow` in `.claude/settings.json`.
 
 ## Issue audit template
 
@@ -32,7 +36,7 @@ Templates Spec Kit can build from, to include in the future. They will be used w
 
 ### Content pulled automatically from the GitHub issue
 
-Templates can fill these variables from the issue with `gh issue view` (see [Retrieve issue data with `gh`, not WebFetch](#retrieve-issue-data-with-gh-not-webfetch)):
+Templates can fill these variables from the issue with `gh issue view`, or WebFetch if `gh` is not available (see [Retrieve issue data with `gh`, falling back to WebFetch](#retrieve-issue-data-with-gh-falling-back-to-webfetch)):
 
 | Variable | From the issue |
 |---|---|
