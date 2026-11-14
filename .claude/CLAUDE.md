@@ -58,10 +58,10 @@ Scenarios contain variables: values you determine while running the lab (for exa
   |---|---|---|---|
   | `{{CANONICAL_URL}}` | URL | Line after the "URL of the Page with the Issue" heading in the issue body | spec, report |
 
-- **Wrap content you produce in XML tags** with descriptive `snake_case` names, for example `<audit_summary_report>…</audit_summary_report>`.
+- **Outputs are variables too.** Content you produce, such as a report, uses the same `{{UPPER_SNAKE_CASE}}` form (for example `{{AUDIT_SUMMARY_REPORT}}`) and is declared in the same table, with "Saved to" saying where it goes.
 - **Do not use** `[ALL_CAPS]`, which Spec Kit's templates use for their own fill-in fields, or bare `<name>`, which Markdown hides when rendered.
 
-Source: Anthropic's [prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (variables in `{{DOUBLE_BRACES}}`, content and output in descriptive XML tags), read 2026-11-13.
+Source: Anthropic's [prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (variables in `{{DOUBLE_BRACES}}`), read 2026-11-13.
 
 # Interfacing with Spec Kit
 
