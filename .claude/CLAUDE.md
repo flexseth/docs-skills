@@ -41,7 +41,7 @@ If you need a tool, **explicitly ask me** before installing it, and state the pu
 # Worktree Organization
 
 Each scenario that the audit agent is evaluated and tested against is one file in the scenarios folder:
-`scenarios/<issue-number>_<issue-brief-description>.md` (for example, `scenarios/1484_audit-broken-links.md`).
+`scenarios/{{ISSUE_NUMBER}}_{{ISSUE_BRIEF_DESCRIPTION}}.md` (for example, `scenarios/1484_audit-broken-links.md`).
 
 Each scenario is developed on its own branch and worktree, created from `docs-audit`, and merged back when complete.
 
@@ -60,6 +60,7 @@ Scenarios contain variables: values you determine while running the lab (for exa
 
 - **Populate issue variables automatically.** Variables that describe the issue (for example `{{ISSUE_REPORTER}}`) are filled in at runtime from the issue on the Issue Tracker. Scenarios keep the variable, not a hand-entered value. The specification should account for this.
 - **Outputs are variables too.** Content you produce, such as a report, uses the same `{{UPPER_SNAKE_CASE}}` form (for example `{{AUDIT_SUMMARY_REPORT}}`) and is declared in the same table, with "Saved to" saying where it goes.
+- **In command examples, use the command-line convention:** `<value>` for a required value, `[value]` for an optional one, for example `gh issue view <issue-number>`. Use `{{UPPER_SNAKE_CASE}}` everywhere else, including paths, branch names, and file names.
 - **Do not use** `[ALL_CAPS]`, which Spec Kit's templates use for their own fill-in fields, or bare `<name>`, which Markdown hides when rendered.
 
 Source: Anthropic's [prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (variables in `{{DOUBLE_BRACES}}`), read 2026-11-13.
@@ -69,16 +70,16 @@ Source: Anthropic's [prompting best practices](https://platform.claude.com/docs/
 Spec Kit "features" are folders, not Git branches. Spec Kit never calls Git, so it works the same in any worktree, and branch names are set by this project's standard, not by Spec Kit:
 
 - **Branch names (standard):** all branches are created from `docs-audit`.
-  - **Scenario or lab context** (called from the `scenarios` folder, or working an Issue Tracker scenario): `lab/<issue-number>_<issue-brief-description>`, for example `lab/1484_audit-broken-links`.
-  - **Any other context** (natural language from a prompt, another specification, and so on): `feat/<brief-description>`, for example `feat/audit-report-format`.
+  - **Scenario or lab context** (called from the `scenarios` folder, or working an Issue Tracker scenario): `lab/{{ISSUE_NUMBER}}_{{ISSUE_BRIEF_DESCRIPTION}}`, for example `lab/1484_audit-broken-links`.
+  - **Any other context** (natural language from a prompt, another specification, and so on): `feat/{{BRIEF_DESCRIPTION}}`, for example `feat/audit-report-format`.
   - Spec Kit does not create or check Git branches, so neither standard needs to follow its `001-…` pattern.
 - **Project root:** Spec Kit finds the project by walking up from the current folder to the nearest `.specify/`. Commit `.specify/` on `docs-audit` (do not gitignore it) so every worktree has its own copy.
 - **Current feature:** tracked in `.specify/feature.json` (or the `SPECIFY_FEATURE_DIRECTORY` environment variable), not by branch name. The file is rewritten each time a feature is created and differs per worktree, so it is listed in `.gitignore`.
 - **Feature numbering:** `/speckit.specify` numbers new features by scanning only the `specs/` folders in the current worktree, so two worktrees could both create `001-…` and collide on merge.
-  - In a lab, pass the issue number and the same brief description as the branch: `--number <issue-number> --short-name <issue-brief-description>`, which creates `specs/<issue-number>-<issue-brief-description>/` (for example, `specs/1484-audit-broken-links/`).
+  - In a lab, pass the issue number and the same brief description as the branch: `--number <issue-number> --short-name <issue-brief-description>`, which creates `specs/{{ISSUE_NUMBER}}-{{ISSUE_BRIEF_DESCRIPTION}}/` (for example, `specs/1484-audit-broken-links/`).
   - Outside a lab there is no issue number, so pass `--timestamp --short-name <brief-description>` to avoid collisions.
 - **Local vs. cloud:** specify, clarify, plan, and tasks run locally in the worktree. Push the branch, then open one issue per task for GitHub Copilot's cloud agent. Each issue names the exact files (for example, `specs/1484-audit-broken-links/tasks.md`), because the cloud agent cannot see the gitignored `feature.json`. Copilot's PRs target the `lab/…` or `feat/…` branch, not `docs-audit`.
-- **Lab findings:** each lab writes its findings to its own spec folder, `specs/<issue-number>-<issue-brief-description>/`. Spec Kit uses the lab findings and research strategy to create actionable implementation plans for the documentation audit workflow.
+- **Lab findings:** each lab writes its findings to its own spec folder, `specs/{{ISSUE_NUMBER}}-{{ISSUE_BRIEF_DESCRIPTION}}/`. Spec Kit uses the lab findings and research strategy to create actionable implementation plans for the documentation audit workflow.
 
 Source: [Spec Kit](https://github.com/github/spec-kit) README, `scripts/bash/create-new-feature.sh`, and `scripts/bash/common.sh` on `main`, read 2026-11-13. The `specify init` flags and the scripts behind `/speckit.plan` and `/speckit.tasks` were not checked; confirm them with `specify init --help` after installing.
 
