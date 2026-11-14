@@ -58,6 +58,7 @@ Scenarios contain variables: values you determine while running the lab (for exa
   |---|---|---|---|
   | `{{CANONICAL_URL}}` | URL | Line after the "URL of the Page with the Issue" heading in the issue body | spec, report |
 
+- **Populate issue variables automatically.** Variables that describe the issue (for example `{{ISSUE_REPORTER}}`) are filled in at runtime from the issue on the Issue Tracker. Scenarios keep the variable, not a hand-entered value. The specification should account for this.
 - **Outputs are variables too.** Content you produce, such as a report, uses the same `{{UPPER_SNAKE_CASE}}` form (for example `{{AUDIT_SUMMARY_REPORT}}`) and is declared in the same table, with "Saved to" saying where it goes.
 - **Do not use** `[ALL_CAPS]`, which Spec Kit's templates use for their own fill-in fields, or bare `<name>`, which Markdown hides when rendered.
 
