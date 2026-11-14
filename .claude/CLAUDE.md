@@ -73,7 +73,7 @@ Spec Kit "features" are folders, not Git branches. Spec Kit never calls Git, so 
   - **Scenario or lab context** (called from the `scenarios` folder, or working an Issue Tracker scenario): `lab/{{ISSUE_NUMBER}}_{{ISSUE_BRIEF_DESCRIPTION}}`, for example `lab/1484_audit-broken-links`.
   - **Any other context** (natural language from a prompt, another specification, and so on): `feat/{{BRIEF_DESCRIPTION}}`, for example `feat/audit-report-format`.
   - Spec Kit does not create or check Git branches, so neither standard needs to follow its `001-…` pattern.
-- **Project root:** Spec Kit finds the project by walking up from the current folder to the nearest `.specify/`. Commit `.specify/` on `docs-audit` (do not gitignore it) so every worktree has its own copy.
+- **Project root:** Spec Kit finds the project by walking up from the current folder to the nearest `.specify/`. Each lab initializes Spec Kit in its own worktree with `specify init` and commits `.specify/` on its lab branch, as its own commit (do not gitignore it).
 - **Current feature:** tracked in `.specify/feature.json` (or the `SPECIFY_FEATURE_DIRECTORY` environment variable), not by branch name. The file is rewritten each time a feature is created and differs per worktree, so it is listed in `.gitignore`.
 - **Feature numbering:** `/speckit.specify` numbers new features by scanning only the `specs/` folders in the current worktree, so two worktrees could both create `001-…` and collide on merge.
   - In a lab, pass the issue number and the same brief description as the branch: `--number <issue-number> --short-name <issue-brief-description>`, which creates `specs/{{ISSUE_NUMBER}}-{{ISSUE_BRIEF_DESCRIPTION}}/` (for example, `specs/1484-audit-broken-links/`).
