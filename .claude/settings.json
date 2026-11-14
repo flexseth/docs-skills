@@ -2,5 +2,14 @@
   "claudeMdExcludes": [
     "**/Developer/CLAUDE.md"
   ],
-  "autoMemoryEnabled": false
+  "autoMemoryEnabled": false,
+  "model": "claude-sonnet-4-5-20250929",
+  "availableModels": [
+    "claude-sonnet-4-5-20250929"
+  ],
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4-5-20250929",
+    "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "1",
+    "CLAUDE_CODE_DISABLE_FAST_MODE": "1"
+  }
 }
