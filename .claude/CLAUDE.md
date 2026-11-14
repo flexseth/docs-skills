@@ -40,8 +40,8 @@ If you need a tool, **explicitly ask me** before installing it, and state the pu
 
 # Worktree Organization
 
-Each scenario that the audit agent is evaluated and tested against lives in its own folder:
-`scenarios/<issue-number>/<brief-description>.md` (for example, `scenarios/1484/audit-broken-links.md`).
+Each scenario that the audit agent is evaluated and tested against is one file in the scenarios folder:
+`scenarios/<issue-number>_<issue-brief-description>.md` (for example, `scenarios/1484_audit-broken-links.md`).
 
 Each scenario is developed on its own branch and worktree, created from `docs-audit`, and merged back when complete.
 
