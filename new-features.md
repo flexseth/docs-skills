@@ -25,3 +25,7 @@ gh issue view <issue-number> --repo WordPress/Documentation-Issue-Tracker --json
 ## Issue audit template
 
 An all-purpose issue audit template, built from the general parts of the scenarios, with the issue variables filled in automatically.
+
+## Templates for Spec Kit
+
+Templates Spec Kit can build from, to include in the future. They will be used when scaffolding new agents and skills with Spec Kit and Claude.
