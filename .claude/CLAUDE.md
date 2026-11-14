@@ -78,6 +78,7 @@ Spec Kit "features" are folders, not Git branches. Spec Kit never calls Git, so 
   - In a lab, pass the issue number and the same brief description as the branch: `--number <issue-number> --short-name <issue-brief-description>`, which creates `specs/<issue-number>-<issue-brief-description>/` (for example, `specs/1484-audit-broken-links/`).
   - Outside a lab there is no issue number, so pass `--timestamp --short-name <brief-description>` to avoid collisions.
 - **Local vs. cloud:** specify, clarify, plan, and tasks run locally in the worktree. Push the branch, then open one issue per task for GitHub Copilot's cloud agent. Each issue names the exact files (for example, `specs/1484-audit-broken-links/tasks.md`), because the cloud agent cannot see the gitignored `feature.json`. Copilot's PRs target the `lab/…` or `feat/…` branch, not `docs-audit`.
+- **Lab findings:** each lab writes its findings to its own spec folder, `specs/<issue-number>-<issue-brief-description>/`. Spec Kit uses the lab findings and research strategy to create actionable implementation plans for the documentation audit workflow.
 
 Source: [Spec Kit](https://github.com/github/spec-kit) README, `scripts/bash/create-new-feature.sh`, and `scripts/bash/common.sh` on `main`, read 2026-11-13. The `specify init` flags and the scripts behind `/speckit.plan` and `/speckit.tasks` were not checked; confirm them with `specify init --help` after installing.
 
