@@ -47,3 +47,6 @@ pdf-processing/
 **Resources:** Reference materials such as database schemas, API documentation, templates, or examples
 
 Claude accesses these files only when referenced. The filesystem model means each content type has different strengths: instructions for flexible guidance, code for reliability, resources for factual lookup.
+
+<!-- Filled in at the end of each lab from the specify-cli line of `uv tool list`. Keep this as the last line. -->
+Spec Kit version: {{SPEC_KIT_VERSION}}
