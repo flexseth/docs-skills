@@ -1,0 +1,1 @@
+https://make.wordpress.org/updates/2026/10/05/documentation-team-update-october-5-2026/#comment-7106:~:text=were%20created.-,Current%20projects%3A,-WP%20Overview
