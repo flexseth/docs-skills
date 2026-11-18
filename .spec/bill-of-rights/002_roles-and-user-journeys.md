@@ -1,6 +1,6 @@
-# Roles and User Journeys
+# Roles and User Journeys (AI Agents)
 
-Base roles (Contributor, First time contributor, Release Team Leads, Developers, UX Developer, Writers, WordPress Credits Contributors) are defined in [roles-and-user-stories.md](../roles-and-user-stories.md).\
+Base roles (Contributor, First time contributor, Release Team Leads, Developers, UX Developer, Writers, WordPress Credits Contributors) are defined in [roles-and-user-stories.md](../roles-and-user-stories.md)
 
 These roles are in the context of the GitHub users relation to the Documentation Team, not the WordPress Admin. Info on Admin roles are at the bottom of this document.
 

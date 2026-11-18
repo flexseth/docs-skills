@@ -32,17 +32,18 @@ All figures come from [TRIAGE.md](TRIAGE.md) or a `gh` query on 2026-10-18.
 ### Label sprawl
 
 - **90 distinct labels are in use** on the 469 open issues. Every open issue has at least one label.
-- **41 are `[Block] …` labels.** Most are on one to four issues each. Together they make the label picker long without making any issue easier to find.
+- **41 are `[Block] …` labels.** Most are on one to four issues each. For contributors (especially new ones), it's nearly impossible to look for issues by label, which doesn't provide much value. The label picker is long without making any issue easier to find.
 - **Release labels are mixed in with everything else.** `6.4` (31), `6.6` (18), `6.7` (16), `7.1` (10), `6.5` (7), and `6.9` (4) cover about 86 open issues. The release is a date-bound planning fact, not a category.
 - **Audience is both a label and a title prefix.** `user documentation (HelpHub)` is on 231 issues and `developer documentation (DevHub)` on 186. Most titles also repeat the audience (`[HelpHub]`, `[6.7 HelpHub]:`, `[DevHub]`).
 - **Several labels duplicate native GitHub features.** `self-assigned` (76 issues) duplicates the assignee field. The GitHub default labels (`bug`, `enhancement`, `duplicate`, `question`, and others) are almost unused; the tracker has no equivalent of them.
-- **Workflow labels do not resolve.** `[Status] Review` is on 84 issues and `[Status] In progress` on 30. Neither says how long the issue has been in that state or who is on it.
+- **Workflow labels do not resolve.** `[Status] Review` is on 84 issues and `[Status] In progress` on 30. Neither says how long the issue has been in that state or who is on it. Automations do not remind contributors or maintainers of the repository about pending actions, or help with housekeeping tasks.
 
 ### A dormant backlog
 
 - Median open issue age is 805 days. 87% of issues have had no human comment in 180 days. 38% have never had one.
 - 60 issues have been claimed, and 48 of those have had no human comment in 90 days.
 - The `/milestones` page is empty. Nothing in the tracker says which WordPress release an issue is meant for.
+- WordPress 6.0 version titles make up over 400 of the open issues, yet all of these issues are no longer relevant.
 
 ### What the data does and does not show
 
@@ -56,12 +57,34 @@ The data does **not** show that labels caused the backlog to go stale. Other cau
 
 Three separate axes, each answering one question.
 
-### 1. Issue Types: who is the documentation for?
+### 1. Address Audience Types 
+
+**Question:** who is the documentation for?
+
+**Answer:** The documentation is for either end users or developers.
+
+#### Existing Standard
+
+Labels `[HelpHub]` and `[DevHub]` indicate the intended audience for the documentation. 
+
+Proposed update: Use **Project Boards** and GitHub actions to automatically categorize issues by audience type.
+
+When a new issue is created,
+
+- if the URL in question contains `developer.wordpress.org` the issue is added to the **DevHub Backlog** board.
+- if the URL in question contains `wordpress.org` the issue is added to the **HelpHub Backlog** board.
+
+Each of these boards has a pinned issue that will never be resolved, with best practices for navigating the repository and finding relevant issues to work on, and how the issue will flow through the project states on that board. (Kanban style)
+
+> Note: The pinned issue on each board serves as a guide for contributors, outlining the workflow and how to interact with issues on that board.
+
+(use the Notice block for the callout)
+{: .notice}
 
 | Type | Replaces | Covers |
 |---|---|---|
-| `End user docs` | label `user documentation (HelpHub)` | Guides on wordpress.org/documentation for the general WordPress user |
-| `Developer docs` | label `developer documentation (DevHub)` | Developer handbooks and the Code Reference on developer.wordpress.org |
+| `end user` | label `user documentation (HelpHub)` | Guides on wordpress.org/documentation for the general WordPress user |
+| `developers` | label `developer documentation (DevHub)` | Developer handbooks and the Code Reference on developer.wordpress.org |
 
 Issues about the Docs Team's own process (currently `internal tasks`, `Contributor Day`, and similar) use the existing org type `Task`.
 
