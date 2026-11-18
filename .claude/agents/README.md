@@ -53,6 +53,8 @@ To create a new agent, follow the instructions provided in the link below:
 - uses the `block-editor-content` skill
 - uses the `HTML-to-blocks` skill
 - uses the `MD-to-blocks` skill
+- see Slack convo for [frontmatter](https://wordpress.slack.com/archives/C02RP4WU5/p1788272401127699?thread_ts=1788271226.558649&cid=C02RP4WU5)
+
 
 `Contributor` (adds or updates content)
 - uses the `contribute-screenshots` skill

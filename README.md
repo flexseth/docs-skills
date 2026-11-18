@@ -34,6 +34,11 @@ Huge chunks of context are not required to constantly live in the main model's e
 
 # CHANGELOG
 
+11.13.26
+- Add Agent Skills reference
+- Update README
+- Add Agent info
+
 11.11.26 
 - Add purpose, how, roadmap
 - Add meta (spec best practices, problem statement)

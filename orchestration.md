@@ -9,3 +9,5 @@ Because Opus and other models read docs from memory, invalid lookups can occur. 
 The [Lookup Agent's](../.claude/agents/docs-lookup.md) assignment is _To Look Twice._
 
 The focus of the `lookup` agent is to serve as a **Consultant** to check and make sure the docs are up-to-date, and provide more in-depth lookups to make sure that deprecations are being followed, all sources are provided, and accurate information is being returned to the main model. This process results in more precise, standards based, and future compliant code being written during from the **Executor**.
+
+To do this workflow, we want to use Claude's built-in tools, and not introduce any new scripts, process flows, etc. Everything should be carefully designed within the agent's capabilities, frontmatter, and tool definitions. 

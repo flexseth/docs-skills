@@ -1,0 +1,1 @@
+https://github.com/WordPress/agent-skills/compare/trunk...add/wp-docs-skill
