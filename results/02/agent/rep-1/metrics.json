@@ -1,0 +1,73 @@
+{
+  "prompt": "02",
+  "arm": "agent",
+  "rep": "rep-1",
+  "duration_ms": 224803,
+  "duration_api_ms": 223880,
+  "wall_ms": 226708,
+  "num_turns": 22,
+  "total_cost_usd": 0.9454942,
+  "tokens": {
+    "input": 20,
+    "output": 28169,
+    "cache_read": 340051,
+    "cache_creation": 39253,
+    "total": 407493
+  },
+  "main_session_tokens": 407493,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 20,
+      "outputTokens": 28169,
+      "cacheReadInputTokens": 340051,
+      "cacheCreationInputTokens": 39253,
+      "webSearchRequests": 0,
+      "costUSD": 0.9454942,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 7892,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 39253,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 0,
+    "main": 0,
+    "subagent": 0,
+    "unique_urls": []
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "script": {
+    "calls": 0,
+    "calls_main": 0,
+    "calls_subagent": 0,
+    "by_command": {},
+    "lookups": 0,
+    "network": 0,
+    "cache_hits": 0,
+    "failed": 0,
+    "page_urls": []
+  },
+  "snippets": {
+    "total": 0,
+    "exact": 0,
+    "reflowed": 0,
+    "altered": 0,
+    "reflowed_items": [],
+    "altered_items": []
+  },
+  "docs_read": 0,
+  "flags": [
+    "docs-lookup agent was never called",
+    "1 Bash call(s) denied by the allowlist (e.g. 'cd /private/var/folders/vr/5bls57m97t3b8vmn307lgb1c0000gn/T/')"
+  ]
+}

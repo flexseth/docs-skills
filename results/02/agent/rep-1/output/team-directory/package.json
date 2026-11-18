@@ -1,0 +1,27 @@
+{
+	"name": "team-directory",
+	"version": "1.0.0",
+	"description": "Manage team members, expose them via REST and list them with a block.",
+	"author": "Team Directory Contributors",
+	"license": "GPL-2.0-or-later",
+	"main": "build/team-list/index.js",
+	"private": true,
+	"scripts": {
+		"build": "wp-scripts build --webpack-copy-php",
+		"start": "wp-scripts start --webpack-copy-php",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"files": [
+		"build",
+		"includes",
+		"team-directory.php",
+		"readme.txt"
+	],
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

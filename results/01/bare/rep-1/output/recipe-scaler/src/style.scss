@@ -1,0 +1,68 @@
+/**
+ * Styles applied on the front end and in the editor.
+ */
+
+.wp-block-recipe-scaler {
+	box-sizing: border-box;
+
+	&__title {
+		margin-top: 0;
+	}
+
+	&__servings {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		margin-bottom: 1em;
+	}
+
+	&__servings-label {
+		font-weight: 600;
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2em;
+		height: 2em;
+		padding: 0;
+		border: 1px solid currentColor;
+		border-radius: 50%;
+		background: transparent;
+		color: inherit;
+		font-size: 1em;
+		line-height: 1;
+		cursor: pointer;
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 2px;
+		}
+	}
+
+	&__servings-count {
+		min-width: 2ch;
+		text-align: center;
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__ingredients {
+		margin: 0;
+		padding-left: 1.25em;
+	}
+
+	&__ingredient > span + span {
+		margin-left: 0.25em;
+	}
+
+	&__quantity {
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+}

@@ -1,0 +1,134 @@
+{
+  "prompt": "05",
+  "arm": "agent",
+  "rep": "rep-1",
+  "duration_ms": 413666,
+  "duration_api_ms": 397511,
+  "wall_ms": 414854,
+  "num_turns": 25,
+  "total_cost_usd": 1.5079049999999998,
+  "tokens": {
+    "input": 52,
+    "output": 48734,
+    "cache_read": 659377,
+    "cache_creation": 75522,
+    "total": 783685
+  },
+  "main_session_tokens": 667559,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 26,
+      "outputTokens": 39874,
+      "cacheReadInputTokens": 571333,
+      "cacheCreationInputTokens": 56326,
+      "webSearchRequests": 0,
+      "costUSD": 1.3624585999999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 15749,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 56326,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-sonnet-5-5": {
+      "inputTokens": 26,
+      "outputTokens": 8860,
+      "cacheReadInputTokens": 88044,
+      "cacheCreationInputTokens": 19196,
+      "webSearchRequests": 0,
+      "costUSD": 0.1454464,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 232,
+      "cacheCreationEphemeral5mInputTokens": 19196,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-sonnet-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-opus-5-5",
+    "claude-sonnet-5-5"
+  ],
+  "fetches": {
+    "total": 0,
+    "main": 0,
+    "subagent": 0,
+    "unique_urls": []
+  },
+  "agent_calls": {
+    "docs_lookup": 2,
+    "other": 0
+  },
+  "script": {
+    "calls": 27,
+    "calls_main": 0,
+    "calls_subagent": 27,
+    "by_command": {
+      "headings": 4,
+      "reference": 1,
+      "resolve": 8,
+      "section": 12,
+      "sitemap": 2
+    },
+    "lookups": 56,
+    "network": 23,
+    "cache_hits": 33,
+    "failed": 0,
+    "page_urls": [
+      "https://developer.wordpress.org/block-editor/reference-guides/components/progress-bar/",
+      "https://developer.wordpress.org/block-editor/reference-guides/data/data-core-editor/",
+      "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-data/",
+      "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dependency-extraction-webpack-plugin/",
+      "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-editor/",
+      "https://developer.wordpress.org/reference/hooks/block_editor_rest_api_preload_paths/"
+    ]
+  },
+  "snippets": {
+    "total": 12,
+    "exact": 5,
+    "reflowed": 0,
+    "altered": 7,
+    "reflowed_items": [],
+    "altered_items": [
+      {
+        "key": "ProgressBar",
+        "chars": 152
+      },
+      {
+        "key": "PluginPrePublishPanel",
+        "chars": 380
+      },
+      {
+        "key": "PluginSidebar",
+        "chars": 473
+      },
+      {
+        "key": "createReduxStore",
+        "chars": 201
+      },
+      {
+        "key": "core/editor lockPostAutosaving",
+        "chars": 117
+      },
+      {
+        "key": "core/editor unlockPostSaving",
+        "chars": 113
+      },
+      {
+        "key": "core/editor unlockPostAutosaving",
+        "chars": 117
+      }
+    ]
+  },
+  "docs_read": 6,
+  "flags": [
+    "docs-lookup exceeded 8 page lookups in one call: [12]",
+    "7 snippet(s) ALTERED (text dropped, changed or invented): ['ProgressBar', 'PluginPrePublishPanel', 'PluginSidebar', 'createReduxStore', 'core/editor lockPostAutosaving', 'core/editor unlockPostSaving', 'core/editor unlockPostAutosaving']",
+    "1 Bash call(s) denied by the allowlist (e.g. 'S=/Users/seth/Developer/WordPress/docs/skills/docs-lookup-ag')",
+    "files written outside ./output (see stray_files.txt)"
+  ]
+}

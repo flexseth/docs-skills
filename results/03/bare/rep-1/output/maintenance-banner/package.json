@@ -1,0 +1,29 @@
+{
+	"name": "maintenance-banner",
+	"version": "1.0.0",
+	"description": "Configurable, scheduled, site-wide maintenance banner for WordPress.",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"files": [
+		"assets",
+		"build",
+		"includes",
+		"languages",
+		"maintenance-banner.php",
+		"readme.txt",
+		"uninstall.php"
+	],
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

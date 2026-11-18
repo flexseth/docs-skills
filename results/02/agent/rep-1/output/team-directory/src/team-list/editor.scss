@@ -1,0 +1,17 @@
+/**
+ * Editor-only styles for the Team List block.
+ */
+.wp-block-team-directory-team-list {
+	&__loading {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 1rem 0;
+	}
+
+	&__count {
+		margin-top: 1rem;
+		font-size: 0.875em;
+		opacity: 0.75;
+	}
+}

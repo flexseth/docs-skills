@@ -1,0 +1,36 @@
+.editorial-checklist__progress {
+	margin-bottom: 16px;
+}
+
+.editorial-checklist__progress-bar {
+	width: 100%;
+	max-width: none;
+}
+
+.editorial-checklist__progress-text,
+.editorial-checklist__required {
+	margin: 8px 0 0;
+}
+
+.editorial-checklist__required {
+	color: #b32d2e;
+
+	&.is-complete {
+		color: #007017;
+	}
+}
+
+.editorial-checklist__items {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.editorial-checklist__item {
+	margin: 0 0 12px;
+}
+
+.editorial-checklist-pre-publish__list {
+	margin-left: 1.5em;
+	list-style: disc;
+}

@@ -1,0 +1,93 @@
+{
+  "prompt": "01",
+  "arm": "bare",
+  "rep": "rep-1",
+  "duration_ms": 162888,
+  "duration_api_ms": 160357,
+  "wall_ms": 163793,
+  "num_turns": 15,
+  "total_cost_usd": 0.6160505,
+  "tokens": {
+    "input": 26265,
+    "output": 20129,
+    "cache_read": 219060,
+    "cache_creation": 27977,
+    "total": 293431
+  },
+  "main_session_tokens": 264270,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 20,
+      "outputTokens": 17213,
+      "cacheReadInputTokens": 219060,
+      "cacheCreationInputTokens": 27977,
+      "webSearchRequests": 0,
+      "costUSD": 0.611968,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 5939,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 27977,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 26245,
+      "outputTokens": 2916,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0040825,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 2331,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 2,
+    "main": 2,
+    "subagent": 0,
+    "unique_urls": [
+      "https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/core-concepts/server-side-rendering/",
+      "https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/core-concepts/undestanding-global-state-local-context-and-derived-state/"
+    ]
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "script": {
+    "calls": 0,
+    "calls_main": 0,
+    "calls_subagent": 0,
+    "by_command": {},
+    "lookups": 0,
+    "network": 0,
+    "cache_hits": 0,
+    "failed": 0,
+    "page_urls": []
+  },
+  "snippets": {
+    "total": 0,
+    "exact": 0,
+    "reflowed": 0,
+    "altered": 0,
+    "reflowed_items": [],
+    "altered_items": []
+  },
+  "docs_read": 2,
+  "flags": [
+    "1 Bash call(s) denied by the allowlist (e.g. 'mkdir -p output/recipe-scaler/src')",
+    "Bash used in the bare arm, which has no Bash"
+  ]
+}

@@ -1,0 +1,20 @@
+.wp-block-recipe-scaler-recipe {
+	.recipe-scaler__editor-ingredients {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		align-items: flex-start;
+	}
+
+	.recipe-scaler__editor-row {
+		width: 100%;
+	}
+
+	.recipe-scaler__editor-quantity {
+		width: 90px;
+	}
+
+	.recipe-scaler__editor-unit {
+		width: 90px;
+	}
+}

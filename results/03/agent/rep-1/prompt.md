@@ -1,0 +1,26 @@
+You are a WordPress developer. Build the plugin described below.
+
+- Write every file under `./output/` (create it). The plugin folder goes directly inside it, e.g. `./output/my-plugin/`.
+- Follow WordPress Coding Standards (PHP and JS), the `create-block` file layout for blocks, PHP 7.4+, and current WordPress, Gutenberg and React APIs.
+- Use WordPress components (`@wordpress/*`) for all editor UI, functional React components only.
+- Escape output, sanitize input, check capabilities and nonces where they apply.
+- Write source files only. Do not run `npm install`, builds or any shell commands. Include a `package.json` with `@wordpress/scripts` so it could be built.
+- Check documentation where you are not sure of an API. Do not guess signatures.
+- When finished, reply with a short list of the files you wrote.
+
+---
+
+Build a plugin called "Maintenance Banner".
+
+Admins configure a site-wide banner:
+- on or off
+- a message, where basic formatting such as bold and links is allowed
+- a background colour
+- a start and end date and time
+- user roles that should NOT see the banner
+
+These settings live on their own page under the Settings menu. If the end time is before the start time, the page shows an error and doesn't save the bad value. All input must be validated and cleaned.
+
+Admins can also turn the banner on or off and edit its message from a panel in the block editor, without leaving the post they're editing. Users who can't manage site options don't see that panel. The settings must also be readable and writable through WordPress's built-in REST API.
+
+When the banner is on, inside its time window (in the site's timezone) and not hidden for the visitor's role, it appears at the top of every front-end page. Deleting the plugin removes everything it stored.

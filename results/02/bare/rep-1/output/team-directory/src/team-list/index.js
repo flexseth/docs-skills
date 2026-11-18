@@ -1,0 +1,14 @@
+/**
+ * Team List block. Rendered on the server (see render.php), so there is no save function.
+ */
+import { registerBlockType } from '@wordpress/blocks';
+
+import './style.scss';
+import './editor.scss';
+
+import Edit from './edit';
+import metadata from './block.json';
+
+registerBlockType( metadata.name, {
+	edit: Edit,
+} );

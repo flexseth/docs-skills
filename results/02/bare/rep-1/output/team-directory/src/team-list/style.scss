@@ -1,0 +1,55 @@
+/**
+ * Front end and editor styles for the Team List block.
+ */
+.wp-block-team-directory-team-list {
+	&__list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 1.5em;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__member {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75em;
+		margin: 0;
+	}
+
+	&__photo {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 1;
+		object-fit: cover;
+		border-radius: 4px;
+	}
+
+	&__name {
+		margin: 0;
+		font-size: 1.25em;
+	}
+
+	&__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		margin: 0.25em 0 0;
+		font-size: 0.875em;
+		opacity: 0.8;
+	}
+
+	&__role {
+		font-weight: 600;
+	}
+
+	&__role + &__since::before {
+		content: "·";
+		margin-right: 0.5em;
+	}
+
+	&__bio p {
+		margin: 0.5em 0 0;
+	}
+}

@@ -1,0 +1,20 @@
+/**
+ * Styles applied only in the editor.
+ */
+
+.wp-block-recipe-scaler {
+	&__editor-ingredients {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		align-items: flex-start;
+	}
+
+	&__editor-row {
+		display: grid;
+		grid-template-columns: 6em 7em 1fr auto;
+		gap: 8px;
+		align-items: end;
+		width: 100%;
+	}
+}

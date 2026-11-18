@@ -1,0 +1,70 @@
+{
+  "prompt": "04",
+  "arm": "bare",
+  "rep": "rep-1",
+  "duration_ms": 269349,
+  "duration_api_ms": 268904,
+  "wall_ms": 270231,
+  "num_turns": 27,
+  "total_cost_usd": 0.9867764000000001,
+  "tokens": {
+    "input": 8,
+    "output": 31151,
+    "cache_read": 114222,
+    "cache_creation": 42610,
+    "total": 187991
+  },
+  "main_session_tokens": 187991,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 31151,
+      "cacheReadInputTokens": 114222,
+      "cacheCreationInputTokens": 42610,
+      "webSearchRequests": 0,
+      "costUSD": 0.9867764000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 14033,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 42610,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 0,
+    "main": 0,
+    "subagent": 0,
+    "unique_urls": []
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "script": {
+    "calls": 0,
+    "calls_main": 0,
+    "calls_subagent": 0,
+    "by_command": {},
+    "lookups": 0,
+    "network": 0,
+    "cache_hits": 0,
+    "failed": 0,
+    "page_urls": []
+  },
+  "snippets": {
+    "total": 0,
+    "exact": 0,
+    "reflowed": 0,
+    "altered": 0,
+    "reflowed_items": [],
+    "altered_items": []
+  },
+  "docs_read": 0,
+  "flags": []
+}

@@ -1,0 +1,99 @@
+{
+  "prompt": "05",
+  "arm": "bare",
+  "rep": "rep-1",
+  "duration_ms": 446266,
+  "duration_api_ms": 444298,
+  "wall_ms": 447234,
+  "num_turns": 35,
+  "total_cost_usd": 1.5093397999999996,
+  "tokens": {
+    "input": 71929,
+    "output": 50847,
+    "cache_read": 996417,
+    "cache_creation": 56486,
+    "total": 1175679
+  },
+  "main_session_tokens": 1095279,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 50,
+      "outputTokens": 42326,
+      "cacheReadInputTokens": 996417,
+      "cacheCreationInputTokens": 56486,
+      "webSearchRequests": 0,
+      "costUSD": 1.4978913999999997,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 16850,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 56486,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 71879,
+      "outputTokens": 8521,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0114484,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 5693,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "models": [
+    "claude-haiku-5-5",
+    "claude-opus-5-5"
+  ],
+  "fetches": {
+    "total": 13,
+    "main": 13,
+    "subagent": 0,
+    "unique_urls": [
+      "https://github.com/WordPress/gutenberg/tree/trunk/packages/editor/src/components/post-publish-button",
+      "https://github.com/WordPress/gutenberg/tree/trunk/packages/icons/src/library",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/components/src/index.ts",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/components/index.js",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/components/post-publish-button/index.js",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/components/post-publish-button/index.jsx",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/components/post-publish-button/index.tsx",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/index.js",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/store/actions.js",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/editor/src/store/selectors.js",
+      "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/packages/icons/src/index.ts"
+    ]
+  },
+  "agent_calls": {
+    "docs_lookup": 0,
+    "other": 0
+  },
+  "script": {
+    "calls": 0,
+    "calls_main": 0,
+    "calls_subagent": 0,
+    "by_command": {},
+    "lookups": 0,
+    "network": 0,
+    "cache_hits": 0,
+    "failed": 0,
+    "page_urls": []
+  },
+  "snippets": {
+    "total": 0,
+    "exact": 0,
+    "reflowed": 0,
+    "altered": 0,
+    "reflowed_items": [],
+    "altered_items": []
+  },
+  "docs_read": 11,
+  "flags": []
+}

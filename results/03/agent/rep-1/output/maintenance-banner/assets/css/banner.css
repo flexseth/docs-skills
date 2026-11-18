@@ -1,0 +1,25 @@
+.maintenance-banner {
+	position: relative;
+	z-index: 99999;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.75em 1em;
+	font-size: 1rem;
+	line-height: 1.5;
+	text-align: center;
+}
+
+.maintenance-banner__message {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.maintenance-banner a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.maintenance-banner a:hover,
+.maintenance-banner a:focus {
+	text-decoration: none;
+}

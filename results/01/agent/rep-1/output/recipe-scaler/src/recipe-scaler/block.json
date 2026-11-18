@@ -1,0 +1,46 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "recipe-scaler/recipe",
+	"version": "1.0.0",
+	"title": "Recipe",
+	"category": "widgets",
+	"icon": "carrot",
+	"description": "A recipe with ingredients that visitors can scale by number of servings.",
+	"keywords": [ "recipe", "ingredients", "servings" ],
+	"textdomain": "recipe-scaler",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"servings": {
+			"type": "integer",
+			"default": 4
+		},
+		"ingredients": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		}
+	},
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}
